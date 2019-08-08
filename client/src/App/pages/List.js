@@ -12,13 +12,20 @@ class List extends Component {
   // Fetch the list on first mount
   componentDidMount() {
     this.getList();
+    this.getDays();
   }
 
   // Retrieves the list of items from the Express app
   getList = () => {
-    fetch('/api/getList')
+    fetch('/api/v1/getList')
     .then(res => res.json())
     .then(list => this.setState({ list }))
+  }
+
+  getDays = async () => {
+    let response = await fetch('api/v1/getDays');
+    let result = await response.json();
+    console.log(result)
   }
 
   render() {
