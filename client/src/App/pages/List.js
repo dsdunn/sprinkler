@@ -13,6 +13,8 @@ class List extends Component {
   componentDidMount() {
     this.getList();
     this.getDays();
+    this.getPrograms();
+    this.createProgram();
   }
 
   // Retrieves the list of items from the Express app
@@ -23,10 +25,33 @@ class List extends Component {
   }
 
   getDays = async () => {
-    let response = await fetch('api/v1/getDays');
+    let response = await fetch('/api/v1/get_days');
+    let result = await response.json();
+    console.log(result)
+  }  
+
+  getPrograms = async () => {
+    let response = await fetch('/api/v1/get_programs');
     let result = await response.json();
     console.log(result)
   }
+
+  createProgram = async () => {
+    let response = await fetch('/api/v1/create_program', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        program_name: 'weeknight',
+        start_time: '220000',
+        end_time: '224500',
+        zones: [1,4,5],
+        duration_per_zone: 15
+      })
+    })
+  }
+
 
   render() {
     const { list } = this.state;

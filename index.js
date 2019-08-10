@@ -20,11 +20,15 @@ app.get('/api/v1/getList', (req,res) => {
 	console.log('Sent list of items');
 });
 
-app.get('/api/v1/getDays', db.getDays)
+app.get('/api/v1/get_days', db.getDays);
+
+app.get('/api/v1/get_programs', db.getPrograms);
 
 app.get('*', (req,res) => {
 	res.sendFile(path.join(__dirname+'/client/build/index.html'));
 });
+
+app.post('/api/v1/create_program', db.createProgram)
 
 const port = process.env.PORT || 5000;
 app.listen(port);
