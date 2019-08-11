@@ -1,8 +1,6 @@
 const express = require('express');
 const path = require('path');
-
 const db = require('./queries');
-
 const bodyParser = require('body-parser')
 
 const app = express();
@@ -14,13 +12,7 @@ app.use(bodyParser.urlencoded({
   })
 )
 
-app.get('/api/v1/getList', (req,res) => {
-	let list = ['item1', 'item2','item3'];
-	res.json(list);
-	console.log('Sent list of items');
-});
-
-app.get('/api/v1/get_days', db.getDays);
+app.get('/api/v1/get_week', db.getWeek);
 
 app.get('/api/v1/get_programs', db.getPrograms);
 
@@ -28,7 +20,9 @@ app.get('*', (req,res) => {
 	res.sendFile(path.join(__dirname+'/client/build/index.html'));
 });
 
-app.post('/api/v1/create_program', db.createProgram)
+app.post('/api/v1/create_program', db.createProgram);
+
+app.delete('/api/v1/delete_program', db.deleteProgram);
 
 const port = process.env.PORT || 5000;
 app.listen(port);
