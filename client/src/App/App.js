@@ -12,24 +12,54 @@ class App extends Component {
     super(props);
     this.state = {
       week: [],
-      programs: []
+      programs: [],
+      schedules: []
     }
   }
 
-  async componentDidMount() {
+  componentDidMount = async () => {
     let week = await api.getWeek()
+    let schedules = await api.getSchedules();
     let programs = await api.getPrograms();
 
-    this.setState({ week, programs });
+    this.setState({ week, programs, schedules });
+  }
+
+  createSchedule = async () => {
+    let response = await api.createSchedule(
+      'test schedule 2',
+      "06:00:00",
+      "06:45:00",
+      14,
+      30,
+      1
+      )
+    
+    this.setState({
+      schedules: [...this.state.schedules, response.schedule]
+    })
+  }
+
+  async createProgram() {
+    let response = await api.createProgram(
+      'another program',
+      [1,2,3],
+      4
+      )
+    console.log(response)
+  }
+
+  async deleteSchedule(id) {
+    // let response = await api.deleteSchedule(8)
   }
 
   daysOfTheWeek() {
     let days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
-    return days.map((day) => {
+    return days.map((day, index) => {
 
       return (
-        <div className="header-day">
+        <div className="header-day" key={index}>
           { day }
         </div>
         )
@@ -48,10 +78,10 @@ class App extends Component {
           <Route exact path='/' component={Day}/>
         </Switch>
 
-        <div onClick={api.createProgram}>Create Program</div>
-        <div onClick={api.deleteProgram}>Delete Program</div>
-        {/*<div onClick={api.createSession}>Create Session</div>
-        <div onClick={api.deleteSession}>Delete Session</div>*/}
+        <div onClick={this.createProgram}>Create Program</div>
+        <div onClick={this.deleteProgram}>Delete Program</div>
+        <div onClick={this.createSchedule}>Create Schedule</div>
+        <div onClick={this.deleteSchedule}>Delete Schedule</div>
       </div>
     );
   }

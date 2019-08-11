@@ -12,7 +12,31 @@ const getWeek = (request, response) => {
     if (error) {
       throw error;
     }
-    response.status(200).json(results.rows)
+
+    response.status(200).json(results.rows);
+  })
+}
+const getSchedules = (request, response) => {
+  pool.query('SELECT * FROM schedules', (error, results) => {
+    if (error) {
+      throw error;
+    }
+    response.status(200).json(results.rows);
+  })
+}
+
+const createSchedule = (request, response) => {
+  let { schedule_name, start_time, end_time, program, interval, iterations } = request.body;
+
+
+  pool.query(`INSERT INTO schedules (schedule_name, start_time, end_time, program, interval, iterations) VALUES ('${schedule_name}','${start_time}', '${end_time}', ${program}, ${interval}, ${iterations}) returning *;`,(error, results) => {
+    if (error) {
+      throw error;
+    }
+    response.status(200).json({
+      text: 'you have successfully created a Schedule' + results.rows[0].schedule_name,
+      schedule: results.rows[0]
+    })
   })
 }
 
@@ -21,15 +45,15 @@ const getPrograms = (request, response) => {
     if (error) {
       throw error;
     }
-    response.status(200).json(results.rows)
+    response.status(200).json(results.rows);
   })
 }
 
 const createProgram = (request, response) => {
-  let { program_name, duration_per_zone, zones } = request.body;
+  let { program_name, zones, duration_per_zone } = request.body;
 
   pool.query(
-    `INSERT INTO programs (program_name, start_time, end_time, duration_per_zone, zones) VALUES ('${program_name}', ${duration_per_zone}, ARRAY[${zones}]);`
+    `INSERT INTO programs (program_name, duration_per_zone, zones) VALUES ('${program_name}', ${duration_per_zone}, ARRAY[${zones}]) returning *;`
 
 
     , (error, results) => {
@@ -37,7 +61,10 @@ const createProgram = (request, response) => {
       throw error;
     }
 
-    response.status(200).json('you have successfully added program ' + program_name)
+    response.status(200).json({
+      text: 'you have successfully added program ' + program_name,
+      id: results.rows[0].id
+    })
   })
 }
 
@@ -56,6 +83,8 @@ const deleteProgram = (request, response) => {
 
 module.exports = {
   getWeek,
+  getSchedules,
+  createSchedule,
   getPrograms,
   createProgram,
   deleteProgram
