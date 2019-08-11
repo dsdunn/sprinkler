@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
 import './App.css';
 
-import Day from './pages/Day';
+import ScheduleArchive from './pages/ScheduleArchive';
+import ScheduleEditor from './pages/ScheduleEditor';
 
 import * as api from './api';
 
@@ -13,7 +14,9 @@ class App extends Component {
     this.state = {
       week: [],
       programs: [],
-      schedules: []
+      schedules: [],
+      selectedSchedule: null,
+      selectedDays: []
     }
   }
 
@@ -66,6 +69,13 @@ class App extends Component {
     })
   }
 
+  updateSelectedSchedule = (id) => {
+    this.setState({
+      selectedSchedule: id
+    })
+    this.props.history.push('/edit_schedule')
+  }
+
   render() {
 
     return (
@@ -75,16 +85,32 @@ class App extends Component {
         </header>
 
         <Switch>
-          <Route exact path='/' component={Day}/>
+          <Route 
+            exact path='/' 
+            render={(props) => (
+              <ScheduleArchive 
+                {...props} 
+                state={this.state} 
+                updateSelectedSchedule={this.updateSelectedSchedule}
+              />
+            )}
+          />
+          <Route 
+            exact path='/edit_schedule' 
+            render={(props) => (<ScheduleEditor {...props} state={this.state}/>)}
+          />
         </Switch>
 
-        <div onClick={this.createProgram}>Create Program</div>
-        <div onClick={this.deleteProgram}>Delete Program</div>
-        <div onClick={this.createSchedule}>Create Schedule</div>
-        <div onClick={this.deleteSchedule}>Delete Schedule</div>
+        <div className="test">
+          Testing
+          <div onClick={this.createProgram}>Create Program</div>
+          <div onClick={this.deleteProgram}>Delete Program</div>
+          <div onClick={this.createSchedule}>Create Schedule</div>
+          <div onClick={this.deleteSchedule}>Delete Schedule</div>
+        </div>
       </div>
     );
   }
 }
 
-export default App;
+export default withRouter(App);

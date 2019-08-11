@@ -11,6 +11,34 @@
   height: 15vh;
 }
 
-.Day {
-  font-size: 36px;
+.schedule-editor {
+  font-size: 26px;
+  padding: 4rem;
+}
+
+.schedule-form-days-of-week {
+  display: flex;
+  justify-content: space-between;
+}
+
+.schedule-editor-main {
+  margin: 1em;
+}
+
+.schedule-archive {
+  color: #7688;
+}
+
+.schedule-form-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.test {
+  padding: 5rem;
+  /*font-size: 4em;*/
+}
+
+.test div {
+  padding: 7px;
 }
