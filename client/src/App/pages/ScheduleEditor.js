@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
+import { calculateEndTime } from '../utils/utils.js';
+
 class ScheduleEditor extends Component {
   constructor(props){
     super(props);
@@ -15,6 +17,8 @@ class ScheduleEditor extends Component {
       duration_per_zone,
       zones: zones || []
     }
+
+    this.handleChange = this.handleChange.bind(this)
   }
 
   createDays() {
@@ -42,6 +46,16 @@ class ScheduleEditor extends Component {
         )
     }
     return zones;
+  }
+
+  handleChange(event) {
+    let { name, value } = event.target;
+    let { start_time, interval, iterations, zones, duration_per_zone } = this.state;
+
+    this.setState({
+      end_time: calculateEndTime(start_time, interval, iterations, zones, duration_per_zone),
+      [name]: value
+    });
   }
 
   render() {
@@ -82,7 +96,7 @@ class ScheduleEditor extends Component {
           <form className="schedule-form-program">
             <h4>Pattern</h4>
             <label htmlFor="duration_per_zone">
-              <input type="number" min="1" max="30" name="duration_per_zone" value={this.state.duration_per_zone || 1 }/>
+              <input type="number" min="1" max="30" name="duration_per_zone" value={this.state.duration_per_zone || 1 } onChange={this.handleChange}/>
               minutes per zone
             </label>
             <fieldset>

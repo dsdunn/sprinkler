@@ -86,7 +86,7 @@ class App extends Component {
           />
           <Route 
             exact path='/edit_schedule' 
-            render={(props) => (<ScheduleEditor {...props} selectedSchedule={this.state.selectedSchedule}/>)}
+            render={(props) => (<ScheduleEditor {...props} schedules={this.state.schedules} selectedSchedule={this.state.selectedSchedule}/>)}
           />
         </Switch>
 
