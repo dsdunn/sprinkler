@@ -40,33 +40,6 @@ const createSchedule = (request, response) => {
   })
 }
 
-// const getPrograms = (request, response) => {
-//   pool.query('SELECT * FROM programs', (error, results) => {
-//     if (error) {
-//       throw error;
-//     }
-//     response.status(200).json(results.rows);
-//   })
-// }
-
-// const createProgram = (request, response) => {
-//   let { program_name, zones, duration_per_zone } = request.body;
-
-//   pool.query(
-//     `INSERT INTO programs (program_name, duration_per_zone, zones) VALUES ('${program_name}', ${duration_per_zone}, ARRAY[${zones}]) returning *;`
-
-
-//     , (error, results) => {
-//     if (error) {
-//       throw error;
-//     }
-
-//     response.status(200).json({
-//       text: 'you have successfully added program ' + program_name,
-//       id: results.rows[0].id
-//     })
-//   })
-// }
 
 const deleteProgram = (request, response) => {
   let { program_name } = request.body;
@@ -85,7 +58,5 @@ module.exports = {
   getWeek,
   getSchedules,
   createSchedule,
-  // getPrograms,
-  // createProgram,
   deleteProgram
 }

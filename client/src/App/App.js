@@ -41,15 +41,6 @@ class App extends Component {
     })
   }
 
-  // async createProgram() {
-  //   let response = await api.createProgram(
-  //     'another program',
-  //     [1,2,3],
-  //     4
-  //     )
-  //   console.log(response)
-  // }
-
   async deleteSchedule(id) {
     // let response = await api.deleteSchedule(8)
   }
@@ -101,8 +92,6 @@ class App extends Component {
 
         <div className="test">
           Testing
-          {/*<div onClick={this.createProgram}>Create Program</div>*/}
-          {/*<div onClick={this.deleteProgram}>Delete Program</div>*/}
           <div onClick={this.createSchedule}>Create Schedule</div>
           <div onClick={this.deleteSchedule}>Delete Schedule</div>
         </div>
