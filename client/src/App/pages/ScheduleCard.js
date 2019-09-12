@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 const ScheduleCard = ({ schedule, updateSelectedSchedule }) => {
   const handleUpdateSelectedSchedule = () => {
-    updateSelectedSchedule(schedule.id)
+    updateSelectedSchedule(schedule)
   }
   return (
     <div>

@@ -13,9 +13,8 @@ class App extends Component {
     super(props);
     this.state = {
       week: [],
-      programs: [],
       schedules: [],
-      selectedSchedule: null,
+      selectedSchedule: {},
       selectedDays: []
     }
   }
@@ -23,9 +22,8 @@ class App extends Component {
   componentDidMount = async () => {
     let week = await api.getWeek()
     let schedules = await api.getSchedules();
-    let programs = await api.getPrograms();
 
-    this.setState({ week, programs, schedules });
+    this.setState({ week, schedules });
   }
 
   createSchedule = async () => {
@@ -43,14 +41,14 @@ class App extends Component {
     })
   }
 
-  async createProgram() {
-    let response = await api.createProgram(
-      'another program',
-      [1,2,3],
-      4
-      )
-    console.log(response)
-  }
+  // async createProgram() {
+  //   let response = await api.createProgram(
+  //     'another program',
+  //     [1,2,3],
+  //     4
+  //     )
+  //   console.log(response)
+  // }
 
   async deleteSchedule(id) {
     // let response = await api.deleteSchedule(8)
@@ -69,9 +67,9 @@ class App extends Component {
     })
   }
 
-  updateSelectedSchedule = (id) => {
+  updateSelectedSchedule = (schedule) => {
     this.setState({
-      selectedSchedule: id
+      selectedSchedule: schedule
     })
     this.props.history.push('/edit_schedule')
   }
@@ -97,14 +95,14 @@ class App extends Component {
           />
           <Route 
             exact path='/edit_schedule' 
-            render={(props) => (<ScheduleEditor {...props} state={this.state}/>)}
+            render={(props) => (<ScheduleEditor {...props} selectedSchedule={this.state.selectedSchedule}/>)}
           />
         </Switch>
 
         <div className="test">
           Testing
-          <div onClick={this.createProgram}>Create Program</div>
-          <div onClick={this.deleteProgram}>Delete Program</div>
+          {/*<div onClick={this.createProgram}>Create Program</div>*/}
+          {/*<div onClick={this.deleteProgram}>Delete Program</div>*/}
           <div onClick={this.createSchedule}>Create Schedule</div>
           <div onClick={this.deleteSchedule}>Delete Schedule</div>
         </div>

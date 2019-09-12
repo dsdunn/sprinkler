@@ -20,8 +20,8 @@ const ScheduleArchive = ({ state, updateSelectedSchedule }) => {
         <h2>
           Check out all your sweet schedules
         </h2>
-        <Link to="/edit_schedule" >
-          <button>Create New Schedule</button>
+        <Link to="/edit_schedule">
+          <button onClick={() => updateSelectedSchedule({})}>Create New Schedule</button>
         </Link>
       </div>
       <main>

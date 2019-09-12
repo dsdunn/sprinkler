@@ -18,12 +18,12 @@ app.get('/api/v1/get_week', db.getWeek);
 app.get('/api/v1/get_schedules', db.getSchedules);
 app.post('/api/v1/create_schedule', db.createSchedule);
 
-app.get('/api/v1/get_programs', db.getPrograms);
+// app.get('/api/v1/get_programs', db.getPrograms);
 
-app.post('/api/v1/create_program', db.createProgram);
+// app.post('/api/v1/create_program', db.createProgram);
 
 
-app.delete('/api/v1/delete_program', db.deleteProgram);
+// app.delete('/api/v1/delete_program', db.deleteProgram);
 
 app.get('*', (req,res) => {
 	res.sendFile(path.join(__dirname+'/client/build/index.html'));

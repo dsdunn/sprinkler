@@ -42,40 +42,40 @@ export const createSchedule = async (
   return results;
 };
 
-export const getPrograms = async () => {
-  let response = await apiFetch('/get_programs');
-  let result = await response.json();
+// export const getPrograms = async () => {
+//   let response = await apiFetch('/get_programs');
+//   let result = await response.json();
   
-  return result;
-}
+//   return result;
+// }
 
-export const createProgram = async (program_name, zones, duration_per_zone) => {
-  let response = await apiFetch('/create_program','POST', {
-      program_name,
-      zones,
-      duration_per_zone
-    }
-  )
-  let result = response.json()
+// export const createProgram = async (program_name, zones, duration_per_zone) => {
+//   let response = await apiFetch('/create_program','POST', {
+//       program_name,
+//       zones,
+//       duration_per_zone
+//     }
+//   )
+//   let result = response.json()
 
-  return result;
-}
+//   return result;
+// }
 
-export const deleteProgram = async (program_name) => {
-  let response = await apiFetch('/delete_program','DELETE',
-      program_name
-  )
-  let result = response.json();
-   console.log(result)
-   return result;
-}
+// export const deleteProgram = async (program_name) => {
+//   let response = await apiFetch('/delete_program','DELETE',
+//       program_name
+//   )
+//   let result = response.json();
+//    console.log(result)
+//    return result;
+// }
 
 
 export default {
   getWeek,
-  getPrograms,
-  createProgram,
+  // getPrograms,
+  // createProgram,
   getSchedules,
   createSchedule,
-  deleteProgram
+  // deleteProgram
 }
