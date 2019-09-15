@@ -13,10 +13,10 @@ app.use(bodyParser.urlencoded({
 )
 
 
-app.get('/api/v1/get_week', db.getWeek);
-
-app.get('/api/v1/get_schedules', db.getSchedules);
-app.post('/api/v1/create_schedule', db.createSchedule);
+app.get('/api/v1/schedules', db.getSchedules);
+app.post('/api/v1/schedules', db.createSchedule);
+app.put('/api/v1/schedules', db.putSchedule);
+app.delete('/api/v1/schedules', db.deleteSchedule);
 
 app.get('*', (req,res) => {
 	res.sendFile(path.join(__dirname+'/client/build/index.html'));

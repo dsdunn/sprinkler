@@ -20,29 +20,64 @@ class App extends Component {
   }
 
   componentDidMount = async () => {
-    let week = await api.getWeek()
     let schedules = await api.getSchedules();
 
-    this.setState({ week, schedules });
+    this.setState({ schedules });
   }
 
-  createSchedule = async () => {
-    let response = await api.createSchedule(
-      'test schedule 2',
-      "06:00:00",
-      "06:45:00",
-      14,
-      30,
-      1
-      )
+  createSchedule = async (schedule) => {
+    let response = await api.createSchedule(schedule);
     
     this.setState({
-      schedules: [...this.state.schedules, response.schedule]
+      schedules: [...this.state.schedules, response.schedule],
+      selectedSchedule: response.schedule
+    })
+
+  }
+
+  putSchedule = async (schedule) => {
+    let response = await api.putSchedule(schedule);
+
+    this.setState({
+      schedules: [
+      ...this.state.schedules.filter(oldSchedule => {
+        return schedule.id !== oldSchedule.id;
+      }), 
+      response.schedule
+      ]
     })
   }
 
-  async deleteSchedule(id) {
-    // let response = await api.deleteSchedule(8)
+  saveSchedule = (schedule = {}) => {
+    if (schedule.id) {
+      this.putSchedule(schedule);
+    } else {
+      this.createSchedule(schedule);
+    }
+
+  }
+
+  deleteSchedule = async (id) => {
+    if (!id) {
+      return;
+    }
+    let response = await api.deleteSchedule(id);
+    console.log(response)
+
+    let schedules = this.state.schedules.filter(schedule => {
+        return schedule.id !== id;
+      });
+
+    this.setState({
+      schedules
+    })
+  }
+
+  updateSelectedSchedule = (schedule) => {
+    this.setState({
+      selectedSchedule: schedule
+    })
+    this.props.history.push('/edit_schedule')
   }
 
   daysOfTheWeek() {
@@ -58,12 +93,6 @@ class App extends Component {
     })
   }
 
-  updateSelectedSchedule = (schedule) => {
-    this.setState({
-      selectedSchedule: schedule
-    })
-    this.props.history.push('/edit_schedule')
-  }
 
   render() {
 
@@ -86,7 +115,15 @@ class App extends Component {
           />
           <Route 
             exact path='/edit_schedule' 
-            render={(props) => (<ScheduleEditor {...props} schedules={this.state.schedules} selectedSchedule={this.state.selectedSchedule}/>)}
+            render={(props) => (
+              <ScheduleEditor 
+                {...props} 
+                schedules={this.state.schedules} 
+                selectedSchedule={this.state.selectedSchedule} 
+                saveSchedule={this.saveSchedule} 
+                deleteSchedule={this.deleteSchedule}
+              />
+            )}
           />
         </Switch>
 

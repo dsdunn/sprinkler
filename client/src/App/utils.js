@@ -25,7 +25,15 @@ function minutesToTimeString(totalMinutes) {
     totalMinutes = totalMinutes - (24 * 60);
   } 
   let minutes = totalMinutes % 60;
+
+  if (minutes < 10) {
+    minutes += '0'
+  }
   let hours = (totalMinutes - minutes) / 60;
+
+  if (hours > 10) {
+    hours += '0'
+  }
 
   return hours.toString() + ':' + minutes.toString() + ':00';
 }

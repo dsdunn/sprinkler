@@ -8,9 +8,9 @@ const ScheduleCard = ({ schedule, updateSelectedSchedule }) => {
     <div>
       <div className="schedule-card">
         { schedule.schedule_name }
-        <div>{ schedule.id }</div>
+        <div>id: { schedule.id }</div>
       </div>
-      <div onClick={ handleUpdateSelectedSchedule }>UpdateSelected</div>
+      <div onClick={ handleUpdateSelectedSchedule }>Edit</div>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 const apiFetch = (path, method = 'GET', payload = null) => {
-  console.log(payload);
+  console.log('payload: ', payload);
   let body = payload ? JSON.stringify(payload) : null
   return fetch(`/api/v1${path}`, {
     method,
@@ -12,38 +12,36 @@ const apiFetch = (path, method = 'GET', payload = null) => {
 }
 
 
-export const getWeek = async () => {
-  let response = await apiFetch('/get_week');
-  let results = await response.json();
-
-  return results;
-}  
-
 export const getSchedules = async () => {
-  let response = await apiFetch('/get_schedules');
+  let response = await apiFetch('/schedules');
   let results = await response.json();
 
   return results;
 }
 
-export const createSchedule = async (
-  schedule_name, start_time, end_time, program, interval, iterations) => {
-
-  let response = await apiFetch('/create_schedule', 'POST', {
-    schedule_name,
-    start_time,
-    end_time,
-    program,
-    interval,
-    iterations
-  })
+export const createSchedule = async (schedule) => {
+  let response = await apiFetch('/schedules', 'POST', schedule)
   let results = await response.json();
 
   return results;
 };
 
-export default {
-  getWeek,
-  getSchedules,
-  createSchedule,
+export const putSchedule = async (schedule) => {
+  let response = await apiFetch('/schedules', 'PUT', schedule)
+  let results = await response.json();
+
+  return results;
 }
+
+export const deleteSchedule = async (id) => {
+  let response = await apiFetch('/schedules', 'DELETE', {id})
+  let results = await response.json();
+  // console.log(results)
+
+  return results;
+}
+
+// export default {
+//   getSchedules,
+//   createSchedule,
+// }

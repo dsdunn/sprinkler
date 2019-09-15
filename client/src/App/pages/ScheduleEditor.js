@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
-import { calculateEndTime, createDays, create } from '../utils/utils.js';
+import { calculateEndTime, createDays, create } from '../utils.js';
 
 class ScheduleEditor extends Component {
   constructor(props){
     super(props);
-    let { schedule_name, start_time, end_time, interval, iterations, duration_per_zone, zones, days } = this.props.selectedSchedule;
+    let { id, schedule_name, start_time, end_time, interval, iterations, duration_per_zone, zones, days } = this.props.selectedSchedule;
 
     this.state = {
-      schedule_name,
+      id,
+      schedule_name: schedule_name || 'My Schedule',
       start_time: start_time || '06:00',
       end_time: end_time || '06:00',
       interval: interval || 1,
@@ -19,7 +20,9 @@ class ScheduleEditor extends Component {
       days: []
     }
 
-    this.handleChange = this.handleChange.bind(this)
+    this.handleChange = this.handleChange.bind(this);
+    this.saveSchedule = this.saveSchedule.bind(this);
+    this.deleteSchedule = this.deleteSchedule.bind(this);
   }
 
   createDays() {
@@ -47,6 +50,19 @@ class ScheduleEditor extends Component {
         )
     }
     return zones;
+  }
+
+
+  saveSchedule(event) {
+    event.preventDefault();
+    this.props.saveSchedule(this.state);
+    this.props.history.goBack();
+  }
+
+  deleteSchedule(event) {
+    event.preventDefault();
+    this.props.deleteSchedule(this.state.id);
+    this.props.history.goBack();
   }
 
   handleChange(event) {
@@ -82,7 +98,7 @@ class ScheduleEditor extends Component {
     let dayIndex = parseInt(day.slice(4));
 
     if (days.includes(dayIndex)) {
-      days = days.filter(day => day != dayIndex);
+      days = days.filter(day => day !== dayIndex);
     } else {
       days.push(dayIndex)
     }
@@ -96,7 +112,7 @@ class ScheduleEditor extends Component {
     let zoneIndex = parseInt(zone.slice(5)) - 1;
 
     if (zones.includes(zoneIndex)) {
-      zones = zones.filter(zone => zone != zoneIndex);
+      zones = zones.filter(zone => zone !== zoneIndex);
     } else {
       zones.push(zoneIndex)
     }
@@ -149,6 +165,8 @@ class ScheduleEditor extends Component {
             <fieldset>
             { this.createZones() }
             </fieldset>
+            <button onClick={this.saveSchedule}>Save Schedule</button>
+            <button onClick={this.deleteSchedule}>Delete</button>
           </form>
         </section>
       </div>

@@ -7,15 +7,6 @@ const pool = new Pool({
   port: 5432,
 })
 
-const getWeek = (request, response) => {
-  pool.query('SELECT * FROM week', (error, results) => {
-    if (error) {
-      throw error;
-    }
-
-    response.status(200).json(results.rows);
-  })
-}
 const getSchedules = (request, response) => {
   pool.query('SELECT * FROM schedules', (error, results) => {
     if (error) {
@@ -26,10 +17,9 @@ const getSchedules = (request, response) => {
 }
 
 const createSchedule = (request, response) => {
-  let { schedule_name, start_time, end_time, program, interval, iterations, duration_per_zone, zones } = request.body;
+  let { schedule_name, start_time, end_time, interval, iterations, duration_per_zone, zones, days } = request.body;
 
-
-  pool.query(`INSERT INTO schedules (schedule_name, start_time, end_time, program, interval, iterations, duration_per_zone, zones) VALUES ('${schedule_name}','${start_time}', '${end_time}', ${program}, ${interval}, ${iterations}, ${duration_per_zone}, ${zones}) returning *;`,(error, results) => {
+  pool.query(`INSERT INTO schedules (schedule_name, start_time, end_time, interval, iterations, duration_per_zone, zones, days) VALUES ('${schedule_name}','${start_time}', '${end_time}', '${interval}', '${iterations}', '${duration_per_zone}', ARRAY [${zones.join(',')}]::integer[], ARRAY [${days.join(',')}]::integer[]) returning *;`,(error, results) => {
     if (error) {
       throw error;
     }
@@ -40,23 +30,38 @@ const createSchedule = (request, response) => {
   })
 }
 
+const putSchedule = (request, response) => {
+  let { id, schedule_name, start_time, end_time, interval, iterations, duration_per_zone, zones, days } = request.body;
 
-const deleteProgram = (request, response) => {
-  let { program_name } = request.body;
-
-  pool.query(`DELETE FROM programs WHERE programs.program_name = '${program_name}'`
-    , (error, results) => {
+  pool.query(`UPDATE schedules SET schedule_name = '${schedule_name}', start_time = '${start_time}', end_time = '${end_time}', interval = '${interval}', iterations = '${iterations}', duration_per_zone = '${duration_per_zone}', zones = ARRAY [${zones}]::integer[], days = ARRAY[${days}]::integer[] WHERE ID = ${id} returning *;`, (error, results) => {
     if (error) {
       throw error;
     }
-
-    response.status(200).json('you have successfully deleted program ' + program_name)
+    response.status(200).json({
+      text: 'you have successfully updated schedule' + results.rows[0].schedule_name,
+      schedule: results.rows[0]
+    })
   })
 }
 
+const deleteSchedule = (request, response) => {
+  let id = request.body.id;
+
+  pool.query(`DELETE FROM schedules WHERE id = ${id} returning *;`, (error, results) => {
+    if (error) {
+      throw error;
+    }
+    response.status(200).json({
+      text: 'you have successfully deleted schedule ' + results.rows[0].schedule_name,
+      schedule: results.rows[0]
+    })
+  })
+}
+
+
 module.exports = {
-  getWeek,
   getSchedules,
   createSchedule,
-  deleteProgram
+  putSchedule,
+  deleteSchedule
 }
