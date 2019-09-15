@@ -1,4 +1,4 @@
-export function calculateEndTime(start_time, interval, iterations, zones, duration_per_zone) {
+export function calculateEndTime({ start_time, interval, iterations, zones, duration_per_zone }) {
   let session = zones.length * duration_per_zone;
   let totalTime = session * iterations + (iterations - 1) * interval;
   let startMinutes = timeStringToMinutes(start_time);
@@ -7,6 +7,10 @@ export function calculateEndTime(start_time, interval, iterations, zones, durati
 }
 
 function timeStringToMinutes(string) {
+  if (!string) {
+    return;
+  }
+
   let array = string.split(':');
   let minutes = parseInt(array[0]) * 60;
 
