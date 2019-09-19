@@ -3,7 +3,7 @@ const pool = new Pool({
   user: 'pi',
   host: 'localhost',
   database: 'sprinkler',
-  password: 'password',
+  password: 'raspberry',
   port: 5432,
 })
 

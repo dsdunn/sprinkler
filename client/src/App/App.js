@@ -7,6 +7,11 @@ import ScheduleEditor from './pages/ScheduleEditor';
 
 import * as api from './api';
 
+const ws = new WebSocket('ws://localhost:8080');
+ws.onopen = () => {
+  console.log('sockets bitch!')
+  ws.send('socket party')
+}
 
 class App extends Component {
   constructor(props){

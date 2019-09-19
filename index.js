@@ -1,4 +1,5 @@
 const express = require('express');
+const WebSocket = require('ws');
 const path = require('path');
 const bodyParser = require('body-parser')
 
@@ -6,6 +7,17 @@ const app = express();
 
 const db = require('./queries');
 const clock = require('./clock');
+
+const wss = new WebSocket.Server({ port: 8080 });
+ 
+wss.on('connection', function connection(ws) {
+  ws.on('message', function incoming(message) {
+    console.log('received: %s', message);
+  });
+ 
+  ws.send('something');
+});
+
 
 app.use(express.static(path.join(__dirname, 'client/build')));
 app.use(bodyParser.json())
@@ -21,6 +33,8 @@ app.put('/api/v1/schedules', db.putSchedule);
 app.delete('/api/v1/schedules', db.deleteSchedule);
 
 // getCurrentProgram (maybe push with web-socket to live updates/ count-down?)
+  // set cronjob to push update if socket connection exists
+
 // stopCurrentProgram
 
 app.get('*', (req,res) => {

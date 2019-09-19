@@ -10,7 +10,7 @@ class ScheduleEditor extends Component {
 
     this.state = {
       id,
-      schedule_name: schedule_name || 'My Schedule',
+      schedule_name: schedule_name,
       start_time: start_time || '06:00',
       end_time: end_time || '06:00',
       interval: interval || 1,
@@ -22,7 +22,7 @@ class ScheduleEditor extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.saveSchedule = this.saveSchedule.bind(this);
-    this.deleteSchedule = this.deleteSchedule.bind(this);
+    this.validateTime = this.validateTime.bind(this);
   }
 
   createDays() {
@@ -55,6 +55,10 @@ class ScheduleEditor extends Component {
 
   saveSchedule(event) {
     event.preventDefault();
+    if (!this.validateTime(this.state.end_time)) {
+      alert('you suck. invalid end time' + this.state.end_time)
+      return;
+    }
     this.props.saveSchedule(this.state);
     this.props.history.goBack();
   }
@@ -70,20 +74,13 @@ class ScheduleEditor extends Component {
 
     if (name.includes('day_')) {
       this.toggleDay(name);
-      this.setEndTime({ [name]: value });
-      return;
-    }    
-
-    if (name.includes('zone_')) {
+    } 
+    else if (name.includes('zone_')) {
       this.toggleZone(name);
-      this.setEndTime({ [name]: value });
-      return;
-    }
-
+    } 
     this.setState({
       [name]: value
     });
-
     this.setEndTime({ [name]: value });
   }
 
@@ -121,6 +118,10 @@ class ScheduleEditor extends Component {
     })
   }
 
+  validateTime(endtime) {
+    return (this.state.end_time && !this.state.end_time.includes('NaN'));
+  }
+
   render() {
 
     return (
@@ -133,7 +134,7 @@ class ScheduleEditor extends Component {
           <form className="schedule-form-main">
             <label htmlFor="schedule_name">
               Schedule Name:
-              <input name="schedule_name" value={this.state.schedule_name || 'New Schedule' } onChange={this.handleChange}/>
+              <input name="schedule_name" value={this.state.schedule_name || '' } onChange={this.handleChange}/>
             </label>
             <label htmlFor="start_time">
               Start Time:
@@ -141,12 +142,12 @@ class ScheduleEditor extends Component {
             </label>
             <div>
               <p>
-                {this.state.end_time}
+                end time: { this.state.end_time }
               </p>
             </div>
             <label htmlFor="interval">
               Interval:
-              <input name="interval" type="number" min="1" max="300" value={this.state.interval} onChange={this.handleChange}/>
+              <input name="interval" type="number" min="0" max="300" value={this.state.interval} onChange={this.handleChange}/>
             </label>
             <label htmlFor="iterations">
               Iterations:

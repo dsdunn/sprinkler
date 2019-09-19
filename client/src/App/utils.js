@@ -19,21 +19,21 @@ function timeStringToMinutes(string) {
 
 function minutesToTimeString(totalMinutes) {
   if (totalMinutes < 60) {
-    return '00:' + totalMinutes.toString() + ':00';
+    return '00:' + totalMinutes.toString();
   } 
   if (totalMinutes > 24 * 60){
     totalMinutes = totalMinutes - (24 * 60);
   } 
   let minutes = totalMinutes % 60;
-
-  if (minutes < 10) {
-    minutes += '0'
-  }
   let hours = (totalMinutes - minutes) / 60;
 
-  if (hours > 10) {
-    hours += '0'
+  if (minutes < 10) {
+    minutes = '0' + minutes;
   }
 
-  return hours.toString() + ':' + minutes.toString() + ':00';
+  if (hours < 10) {
+    hours = '0' + hours;
+  } 
+
+  return hours.toString() + ':' + minutes.toString();
 }
