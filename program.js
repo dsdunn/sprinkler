@@ -1,4 +1,4 @@
-// const valveControl = require('./valveControl');
+const ValveControl = require('./valveControl');
 
 class Program {
   constructor({ duration_per_zone, zones, iterations, interval }) {
@@ -25,7 +25,7 @@ class Program {
     this.series = setInterval(function() {
       if (index != 0) {
         console.log('turn off ', zones[index - 1])
-         // valveControl.zoneOff(zones[index - 1])
+         //ValveControl.zoneOff(zones[index - 1])
       }
       if (index >= zones.length) {
         killSeries();
@@ -33,7 +33,7 @@ class Program {
         return;
       }
       console.log('turn on ', zones[index]);
-      // valveControl.zoneOn(zones[index])
+      //ValveControl.zoneOn(zones[index])
       index++;
     }, this.duration_per_zone)
     index++;
@@ -44,7 +44,7 @@ class Program {
   }
   killSeries() {
     clearInterval(this.series);
-    // valveControl.allOff();
+    //ValveControl.allOff();
   }
   pauseProgram() {
     this.paused = true;
@@ -54,7 +54,7 @@ class Program {
   }
   stopProgram() {
     this.killSeries();
-    // valveControl.allOff();
+    //ValveControl.allOff();
     this.running = false;
   }
   maybeWait() {

@@ -6,9 +6,13 @@ const bodyParser = require('body-parser')
 const app = express();
 
 const db = require('./queries');
-const clock = require('./clock');
+const { Clock } = require('./clock');
+const { ValveControl } = require('./valveControl');
 
 const wss = new WebSocket.Server({ port: 8080 });
+
+ValveControl.init();
+// valveControl.testZone(1);
  
 wss.on('connection', function connection(ws) {
   ws.on('message', function incoming(message) {
@@ -48,6 +52,8 @@ app.listen(port);
 
 console.log('App is listening on port ' + port);
 
-const mainLoop = new clock.Clock()
+const mainLoop = new Clock;
+console.log(mainLoop)
 
 mainLoop.init();
+
