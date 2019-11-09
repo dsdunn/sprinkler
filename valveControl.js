@@ -4,7 +4,7 @@ const Gpio = require('onoff').Gpio;
 class ValveControl {
 
   constructor() {
-    this.currentlyOnZoneNumber: null;
+    this.currentlyOnZoneNumber= null;
     this.zones = [];
   }
 
@@ -25,15 +25,6 @@ class ValveControl {
     this.zones = [zone1, zone2, zone3, zone4, zone5, zone6];
   }
 
-  static testZone(zoneNumber) {
-    let current = this.currentlyOnZoneNumber;
-
-    if (current) {
-      this.zoneOff(current);
-    }
-    if this.zoneOn(zoneNumber);
-  }
-
   static testAllZones(zone = 1) {
     let current = this.currentlyOnZoneNumber;
 
@@ -42,9 +33,9 @@ class ValveControl {
     }
     if (zone < 7) {
       this.zoneOn(zone);
-      setTimeOut((that = this) => {
+      setTimeout((that = this) => {
         that.testAllZones(zone + 1)
-      }, 2500)
+      }, 1500)
     } else {
       return;
     }
@@ -56,7 +47,7 @@ class ValveControl {
   }
 
   static zoneOff(zoneNumber) {
-    this.zones[zoneNumber - 1].writeSync(0);
+    this.zones[zoneNumber - 1].writeSync(1);
     this.currentlyOnZoneNumber = null;
   }
 
