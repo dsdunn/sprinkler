@@ -10,41 +10,37 @@ class ValveControl {
   static init() {
     console.log('init')
     this.mapPins();
+    this.testAllZones();
   }
 
   static mapPins() {
-    let zone1 = new Gpio(4, 'out');
-    let zone2 = new Gpio(17, 'out');
-    let zone3 = new Gpio(5, 'out');
-    let zone4 = new Gpio(6, 'out');
-    let zone5 = new Gpio(13, 'out');
-    let zone6 = new Gpio(19, 'out');
+    let zone1 = new Gpio(4, 'high');
+    let zone2 = new Gpio(17, 'high');
+    let zone3 = new Gpio(5, 'high');
+    let zone4 = new Gpio(6, 'high');
+    let zone5 = new Gpio(13, 'high');
+    let zone6 = new Gpio(19, 'high');
 
     this.zones = [zone1, zone2, zone3, zone4, zone5, zone6];
-    this.setBaseState();
-  }
-
-  static setBaseState() {
-    this.zones.forEach(zone => {
-      zone.write(0);
-    })
   }
 
   static testZone(i) {
     console.log(this.zones);
-    this.zones[i - 1].write(1)
+    this.zones[i - 1].writeSync(1)
     setTimeout(() => {
-      this.zones[i - 1].write(0);
+      this.zones[i - 1].writeSync(0);
     }, 2000)
   }
 
   static testAllZones() {
+    let on = false;
+
     this.zones.forEach(zone => {
-      console.log(zone);
-      zone.write(1);
+     // zone.writeSync(0);
+      console.log('off', zone.readSync());
       setTimeout(() => {
-        console.log('off', zone);
-        zone.write(0);
+     // zone.writeSync(1);
+       // console.log('on', zone.readSync());
       }, 1500)
     })
   }

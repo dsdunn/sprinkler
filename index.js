@@ -53,7 +53,7 @@ console.log('App is listening on port ' + port);
 const mainLoop = new Clock;
 
 ValveControl.init();
-ValveControl.testAllZones();
+//ValveControl.testAllZones();
 
 mainLoop.init();
 
