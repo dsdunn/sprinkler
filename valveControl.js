@@ -21,7 +21,13 @@ class ValveControl {
     let zone6 = new Gpio(19, 'out');
 
     this.zones = [zone1, zone2, zone3, zone4, zone5, zone6];
-    console.log('pins mapped')
+    this.setBaseState();
+  }
+
+  static setBaseState() {
+    this.zones.forEach(zone => {
+      zone.write(0);
+    })
   }
 
   static testZone(i) {
@@ -34,8 +40,10 @@ class ValveControl {
 
   static testAllZones() {
     this.zones.forEach(zone => {
+      console.log(zone);
       zone.write(1);
       setTimeout(() => {
+        console.log('off', zone);
         zone.write(0);
       }, 1500)
     })
