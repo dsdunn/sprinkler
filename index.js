@@ -1,7 +1,7 @@
 const express = require('express');
 const WebSocket = require('ws');
 const path = require('path');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
 
 const app = express();
 
@@ -17,7 +17,7 @@ wss.on('connection', function connection(ws) {
     console.log('received: %s', message);
   });
  
-  ws.send('something');
+  // ws.send('something');
 });
 
 
@@ -54,6 +54,14 @@ const mainLoop = new Clock;
 
 ValveControl.init();
 //ValveControl.testAllZones();
+const sendStatus = () => {
+  console.log(wss.clients);
+  wss.clients.forEach((client) => {
+    client.send(ValveControl.getCurrentlyOnZone());
+  })
+}
+
+setInterval(sendStatus, 1000);
 
 mainLoop.init();
 

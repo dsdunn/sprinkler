@@ -1,6 +1,9 @@
-const Gpio = require('onoff').Gpio;
+let Gpio = require('onoff').Gpio;
+const mockGpio = require('./mockGpio');
 
-
+if (!Gpio.accessible) {
+  Gpio = mockGpio;
+}
 class ValveControl {
 
   constructor() {
@@ -55,6 +58,10 @@ class ValveControl {
     this.zones.forEach(zone => {
       zone.writeSync(1);
     })
+  }
+
+  getCurrentlyOnZone() {
+    return this.currentlyOnZoneNumber;
   }
 }
 

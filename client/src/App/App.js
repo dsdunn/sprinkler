@@ -13,6 +13,10 @@ ws.onopen = () => {
   ws.send('socket party')
 }
 
+ws.onmessage = (payload) => {
+  console.log(payload);
+}
+
 class App extends Component {
   constructor(props){
     super(props);
