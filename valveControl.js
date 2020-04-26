@@ -11,13 +11,13 @@ class ValveControl {
     this.zones = [];
   }
 
-  static init() {
+  init() {
     console.log('init')
     this.mapPins();
     this.testAllZones();
   }
 
-  static mapPins() {
+  mapPins() {
     let zone1 = new Gpio(4, 'high');
     let zone2 = new Gpio(17, 'high');
     let zone3 = new Gpio(5, 'high');
@@ -28,7 +28,7 @@ class ValveControl {
     this.zones = [zone1, zone2, zone3, zone4, zone5, zone6];
   }
 
-  static testAllZones(zone = 1) {
+  testAllZones(zone = 1) {
     let current = this.currentlyOnZoneNumber;
 
     if (current) {
@@ -44,17 +44,17 @@ class ValveControl {
     }
   }
 
-  static zoneOn(zoneNumber) {
+  zoneOn(zoneNumber) {
     this.zones[zoneNumber - 1].writeSync(0);
     this.currentlyOnZoneNumber = zoneNumber;
   }
 
-  static zoneOff(zoneNumber) {
+  zoneOff(zoneNumber) {
     this.zones[zoneNumber - 1].writeSync(1);
     this.currentlyOnZoneNumber = null;
   }
 
-  static allZonesOff() {
+  allZonesOff() {
     this.zones.forEach(zone => {
       zone.writeSync(1);
     })

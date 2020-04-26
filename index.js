@@ -40,6 +40,7 @@ app.delete('/api/v1/schedules', db.deleteSchedule);
 // stopCurrentProgram
 
 app.get('*', (req,res) => {
+  console.log(__dirname);
 	res.sendFile(path.join(__dirname+'/client/build/index.html'));
 });
 
@@ -51,13 +52,14 @@ app.listen(port);
 console.log('App is listening on port ' + port);
 
 const mainLoop = new Clock;
+const valveControl = new ValveControl;
 
-ValveControl.init();
+valveControl.init();
 //ValveControl.testAllZones();
 const sendStatus = () => {
   console.log(wss.clients);
   wss.clients.forEach((client) => {
-    client.send(ValveControl.getCurrentlyOnZone());
+    client.send(valveControl.getCurrentlyOnZone());
   })
 }
 
