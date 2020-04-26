@@ -16,8 +16,13 @@ const getSchedules = (request, response) => {
   })
 }
 
+const pollSchedules = (request, response) => {
+  // asdf
+}
+
 const createSchedule = (request, response) => {
   let { schedule_name, start_time, end_time, interval, iterations, duration_per_zone, zones, days } = request.body;
+  console.log(request.body);
 
   pool.query(`INSERT INTO schedules (schedule_name, start_time, end_time, interval, iterations, duration_per_zone, zones, days) VALUES ('${schedule_name}','${start_time}', '${end_time}', '${interval}', '${iterations}', '${duration_per_zone}', ARRAY [${zones.join(',')}]::integer[], ARRAY [${days.join(',')}]::integer[]) returning *;`,(error, results) => {
     if (error) {

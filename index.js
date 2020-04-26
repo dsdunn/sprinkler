@@ -14,7 +14,7 @@ const wss = new WebSocket.Server({ port: 8080 });
  
 wss.on('connection', function connection(ws) {
   ws.on('message', function incoming(message) {
-    console.log('received: %s', message);
+    // console.log('received: %s', message);
   });
  
   // ws.send('something');
@@ -57,7 +57,7 @@ const valveControl = new ValveControl;
 valveControl.init();
 //ValveControl.testAllZones();
 const sendStatus = () => {
-  console.log(wss.clients);
+  // console.log(wss.clients);
   wss.clients.forEach((client) => {
     client.send(valveControl.getCurrentlyOnZone());
   })

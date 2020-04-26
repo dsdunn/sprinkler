@@ -12,18 +12,13 @@ CREATE TABLE IF NOT EXISTS schedules (
   schedule_name varchar(45) NOT NULL,
   start_time TIME NOT NULL,
   end_time TIME NOT NULL,
-  program integer,
-  interval integer,
-  iterations integer
-);"
-
-psql -U postgres -d sprinkler -c "
-CREATE TABLE IF NOT EXISTS programs (
-  id serial PRIMARY KEY, 
-  program_name varchar(45) NOT NULL,
   zones integer [],
-  duration_per_zone integer
+  duration_per_zone integer,
+  interval integer,
+  iterations integer,
+  days_of_week integer []
 );"
 
-psql -U postgres -d sprinkler -c "grant all privileges on table programs to pi;" 
 psql -U postgres -d sprinkler -c "grant all privileges on table schedules to pi;" 
+psql -U postgres -d sprinkler -c "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO pi;" 
+
