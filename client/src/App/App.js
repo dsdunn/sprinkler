@@ -14,7 +14,7 @@ ws.onopen = () => {
 }
 
 ws.onmessage = (payload) => {
-  console.log(payload);
+  // console.log(payload);
 }
 
 class App extends Component {

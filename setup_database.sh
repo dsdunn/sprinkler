@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS schedules (
   duration_per_zone integer,
   interval integer,
   iterations integer,
-  days_of_week integer []
+  days integer []
 );"
 
 psql -U postgres -d sprinkler -c "grant all privileges on table schedules to pi;" 

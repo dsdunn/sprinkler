@@ -2,6 +2,7 @@
 
 const db = require('./queries');
 const Program = require('./program');
+const Queries = require('./queries');
 
 class Clock {
 
@@ -29,16 +30,29 @@ class Clock {
     })
   }
 
-  checkForSchedule() {
-    // write query to get schedule starting now (days includes today and start_time minute == now.minute)
-    // if schedule -> this.runProgram(schedule);
+  async checkForSchedule() {
+    let now = new Date();
+    let thisHour = now.getHours();
+    let thisMinute = now.getMinutes();
+    let nowTime = thisHour + ':' + thisMinute + ':00';
+
+    let result = await Queries.internalGetThisMinuteSchedule(this.today, nowTime);
+    let todaysSchedules = result.rows;
+    console.log('todays: ', todaysSchedules);
+    let scheduleNow = todaysSchedules.find(schedule => {
+      return schedule.start_time === nowTime;
+    })
+    if (scheduleNow) {
+      console.log('scheduleNow: ', scheduleNow);
+      // this.runProgram(schedule);
+    } 
   }
 
   getDay() {
-    let days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    // let days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     let now = new Date();
     
-    this.today = days[now.getDay()];
+    this.today = now.getDay();
   }
 
   runProgram(schedule) {

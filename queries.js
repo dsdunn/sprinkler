@@ -16,6 +16,21 @@ const getSchedules = (request, response) => {
   })
 }
 
+const internalGetThisMinuteSchedule = (day, minute) => {
+  try{
+    return new Promise((resolve, reject) => {
+      pool.query("select * from schedules where days @> ARRAY['" + day + "']::integer[]", (err, result) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(result);
+      })
+    })
+  } catch(err) {
+    console.log('query error: ', + err);
+  }
+}
+
 const pollSchedules = (request, response) => {
   // asdf
 }
@@ -68,5 +83,6 @@ module.exports = {
   getSchedules,
   createSchedule,
   putSchedule,
-  deleteSchedule
+  deleteSchedule,
+  internalGetThisMinuteSchedule
 }

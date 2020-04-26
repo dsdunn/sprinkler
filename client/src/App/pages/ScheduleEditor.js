@@ -77,10 +77,11 @@ class ScheduleEditor extends Component {
     } 
     else if (name.includes('zone_')) {
       this.toggleZone(name);
-    } 
-    this.setState({
-      [name]: value
-    });
+    } else {
+      this.setState({
+        [name]: value
+      });
+    }
     this.setEndTime({ [name]: value });
   }
 
