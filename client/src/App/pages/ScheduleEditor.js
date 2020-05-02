@@ -9,7 +9,7 @@ class ScheduleEditor extends Component {
     let { id, schedule_name, start_time, end_time, interval, iterations, duration_per_zone, zones, days } = this.props.selectedSchedule;
 
     this.state = {
-      id,
+      id: id || null,
       schedule_name: schedule_name,
       start_time: start_time || '06:00',
       end_time: end_time || '06:00',
@@ -17,21 +17,40 @@ class ScheduleEditor extends Component {
       iterations: iterations || 1,
       duration_per_zone: duration_per_zone || 5,
       zones: zones || [],
-      days: []
+      days: this.initDays(days)
     }
 
     this.handleChange = this.handleChange.bind(this);
     this.saveSchedule = this.saveSchedule.bind(this);
     this.validateTime = this.validateTime.bind(this);
+    this.initDays = this.initDays.bind(this);
+    this.deleteSchedule = this.deleteSchedule.bind(this);
+  }
+
+  isSelected(index) {
+    return true;
+    // console.log('shit: ', this.state.includes(index));
+    // return this.state.days.includes(index) ? true : false;
+  }
+
+  initDays(days) {
+    days = days || [];
+    
+    let newDays = new Array(7);
+
+    for (let i = 0; i < 7; i++) {
+      newDays[i] = days.includes(i);
+    }
+    return newDays;
   }
 
   createDays() {
-    let days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    let dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-    return days.map((day, index) => {
+    return dayNames.map((day, index) => {
       return (
           <label htmlFor={day} key={index}>
-            <input name={ `day_${index}` } type="checkbox" onChange={this.handleChange}/>
+            <input name={ `day_${index}` } type="checkbox" selected={ this.state.days[index] } onChange={this.handleChange}/>
             <div>{day}</div>
           </label>
         )
@@ -95,11 +114,8 @@ class ScheduleEditor extends Component {
     let days = this.state.days;
     let dayIndex = parseInt(day.slice(4));
 
-    if (days.includes(dayIndex)) {
-      days = days.filter(day => day !== dayIndex);
-    } else {
-      days.push(dayIndex)
-    }
+    days[dayIndex] = !days[dayIndex];
+
     this.setState({
       days
     })

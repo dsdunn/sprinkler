@@ -14,9 +14,9 @@ const apiFetch = (path, method = 'GET', payload = null) => {
 
 export const getSchedules = async () => {
   let response = await apiFetch('/schedules');
-  let results = await response.json();
+  let result = await response.json();
 
-  return results;
+  return result;
 }
 
 export const createSchedule = async (schedule) => {

@@ -36,15 +36,14 @@ class Clock {
     let thisMinute = now.getMinutes();
     let nowTime = thisHour + ':' + thisMinute + ':00';
 
-    let result = await Queries.internalGetThisMinuteSchedule(this.today, nowTime);
-    let todaysSchedules = result.rows;
-    console.log('todays: ', todaysSchedules);
+    let result = await Queries.pollSchedules(this.today, nowTime);
+    let todaysSchedules = result;
     let scheduleNow = todaysSchedules.find(schedule => {
       return schedule.start_time === nowTime;
     })
     if (scheduleNow) {
       console.log('scheduleNow: ', scheduleNow);
-      // this.runProgram(schedule);
+      this.runProgram(schedule);
     } 
   }
 
@@ -53,6 +52,10 @@ class Clock {
     let now = new Date();
     
     this.today = now.getDay();
+  }
+
+  getCurrentSchedule() {
+    return this.current_schedule;
   }
 
   runProgram(schedule) {

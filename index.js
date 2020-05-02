@@ -59,11 +59,15 @@ valveControl.init();
 const sendStatus = () => {
   // console.log(wss.clients);
   wss.clients.forEach((client) => {
-    client.send(valveControl.getCurrentlyOnZone());
+    console.log(valveControl.getCurrentlyOnZone());
+    client.send(JSON.stringify({
+      zone: valveControl.getCurrentlyOnZone(),
+      schedule: mainLoop.getCurrentSchedule()
+    }));
   })
 }
 
-setInterval(sendStatus, 1000);
+setInterval(sendStatus, 5000);
 
 mainLoop.init();
 

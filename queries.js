@@ -1,81 +1,75 @@
-const Pool = require('pg').Pool
-const pool = new Pool({
-  user: 'pi',
-  host: 'localhost',
-  database: 'sprinkler',
-  password: 'raspberry',
-  port: 5432,
-})
+var knex = require('knex')({
+  client: 'pg',
+  connection: {
+    host : 'localhost',
+    user : 'pi',
+    password : 'raspberry',
+    database : 'sprinkler',
+    port: 5432
+  }
+});
 
-const getSchedules = (request, response) => {
-  pool.query('SELECT * FROM schedules', (error, results) => {
-    if (error) {
-      throw error;
-    }
-    response.status(200).json(results.rows);
-  })
+const daysBoolToInt = (bools) => {
+  return bools.reduce((newDays, bool, i) => {
+    if (bool) { newDays.push(i)}
+    return newDays;
+  }, [])
 }
 
-const internalGetThisMinuteSchedule = (day, minute) => {
+const pollSchedules = (day, minute) => {
   try{
-    return new Promise((resolve, reject) => {
-      pool.query("select * from schedules where days @> ARRAY['" + day + "']::integer[]", (err, result) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(result);
-      })
-    })
+    return knex('schedules').whereRaw('days @> ARRAY[?]::integer[]',[day])
+    .then(result => result);
   } catch(err) {
     console.log('query error: ', + err);
   }
 }
 
-const pollSchedules = (request, response) => {
-  // asdf
+const getSchedules = (request, response) => {
+  knex('schedules')
+    .then(result => response.status(200).json(result));
 }
 
 const createSchedule = (request, response) => {
   let { schedule_name, start_time, end_time, interval, iterations, duration_per_zone, zones, days } = request.body;
-  console.log(request.body);
+  days = daysBoolToInt(days);
 
-  pool.query(`INSERT INTO schedules (schedule_name, start_time, end_time, interval, iterations, duration_per_zone, zones, days) VALUES ('${schedule_name}','${start_time}', '${end_time}', '${interval}', '${iterations}', '${duration_per_zone}', ARRAY [${zones.join(',')}]::integer[], ARRAY [${days.join(',')}]::integer[]) returning *;`,(error, results) => {
-    if (error) {
-      throw error;
-    }
-    response.status(200).json({
-      text: 'you have successfully created a Schedule' + results.rows[0].schedule_name,
-      schedule: results.rows[0]
-    })
-  })
+  knex('schedules').insert({schedule_name, start_time, end_time, interval, iterations, duration_per_zone, zones, days}, '*')
+    .then(result => {
+      response.status(200).json({
+        text: 'you have successfully created a Schedule' + result[0].schedule_name,
+        schedule: result[0]
+      });
+    });
 }
 
 const putSchedule = (request, response) => {
   let { id, schedule_name, start_time, end_time, interval, iterations, duration_per_zone, zones, days } = request.body;
 
-  pool.query(`UPDATE schedules SET schedule_name = '${schedule_name}', start_time = '${start_time}', end_time = '${end_time}', interval = '${interval}', iterations = '${iterations}', duration_per_zone = '${duration_per_zone}', zones = ARRAY [${zones}]::integer[], days = ARRAY[${days}]::integer[] WHERE ID = ${id} returning *;`, (error, results) => {
-    if (error) {
-      throw error;
-    }
-    response.status(200).json({
-      text: 'you have successfully updated schedule' + results.rows[0].schedule_name,
-      schedule: results.rows[0]
-    })
-  })
+  days = daysBoolToInt(days);
+
+  knex('schedules')
+    .update({schedule_name, start_time, end_time, interval, iterations, duration_per_zone, zones, days}, '*')
+    .where({id: id}) 
+    .then(result => {
+      console.log('put: ', result);
+      response.status(200).json({
+        text: 'you have successfully updated schedule' + result[0].schedule_name,
+        schedule: result[0]
+      });
+    });
 }
 
 const deleteSchedule = (request, response) => {
   let id = request.body.id;
 
-  pool.query(`DELETE FROM schedules WHERE id = ${id} returning *;`, (error, results) => {
-    if (error) {
-      throw error;
-    }
-    response.status(200).json({
-      text: 'you have successfully deleted schedule ' + results.rows[0].schedule_name,
-      schedule: results.rows[0]
-    })
-  })
+  knex('schedules').delete({id: id}, '*')
+    .then(result => {
+      response.status(200).json({
+        text: 'you have successfully deleted schedule ' + result[0].schedule_name,
+        schedule: result[0]
+      })
+    });
 }
 
 
@@ -84,5 +78,5 @@ module.exports = {
   createSchedule,
   putSchedule,
   deleteSchedule,
-  internalGetThisMinuteSchedule
+  pollSchedules
 }

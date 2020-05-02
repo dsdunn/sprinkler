@@ -12,6 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.17.0",
+    "knex": "^0.21.1",
     "node-cron": "^2.0.3",
     "onoff": "^5.0.0",
     "pg": "^7.12.0",

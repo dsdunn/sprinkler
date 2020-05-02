@@ -14,7 +14,14 @@ ws.onopen = () => {
 }
 
 ws.onmessage = (payload) => {
-  // console.log(payload);
+  let { data } = payload;
+  data = JSON.parse(data);
+
+  if (data.schedule) {
+    this.setState({
+      currentRunningSchedule: data.schedule
+    })
+  }
 }
 
 class App extends Component {
@@ -70,8 +77,6 @@ class App extends Component {
       return;
     }
     let response = await api.deleteSchedule(id);
-    console.log(response)
-
     let schedules = this.state.schedules.filter(schedule => {
         return schedule.id !== id;
       });
@@ -137,6 +142,7 @@ class App extends Component {
 
         <div className="test">
           Testing
+          <div>{ this.state.currentRunningSchedule }</div>
           <div onClick={this.createSchedule}>Create Schedule</div>
           <div onClick={this.deleteSchedule}>Delete Schedule</div>
         </div>
