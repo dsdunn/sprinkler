@@ -12,9 +12,7 @@ class ValveControl {
   }
 
   init() {
-    console.log('init')
     this.mapPins();
-    this.testAllZones();
   }
 
   mapPins() {
@@ -45,12 +43,15 @@ class ValveControl {
   }
 
   zoneOn(zoneNumber) {
-    this.zones[zoneNumber - 1].writeSync(0);
+    console.log(this.zones[zoneNumber]);
+    if (!this.zones[zoneNumber]) { return };
+
+    this.zones[zoneNumber].writeSync(0);
     this.currentlyOnZoneNumber = zoneNumber;
   }
 
   zoneOff(zoneNumber) {
-    this.zones[zoneNumber - 1].writeSync(1);
+    this.zones[zoneNumber].writeSync(1);
     this.currentlyOnZoneNumber = null;
   }
 

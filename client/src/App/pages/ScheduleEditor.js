@@ -10,7 +10,7 @@ class ScheduleEditor extends Component {
 
     this.state = {
       id: id || null,
-      schedule_name: schedule_name,
+      schedule_name: schedule_name || 'New Schedule',
       start_time: start_time || '06:00',
       end_time: end_time || '06:00',
       interval: interval || 1,
@@ -35,7 +35,7 @@ class ScheduleEditor extends Component {
 
   initDays(days) {
     days = days || [];
-    
+
     let newDays = new Array(7);
 
     for (let i = 0; i < 7; i++) {
@@ -50,7 +50,7 @@ class ScheduleEditor extends Component {
     return dayNames.map((day, index) => {
       return (
           <label htmlFor={day} key={index}>
-            <input name={ `day_${index}` } type="checkbox" selected={ this.state.days[index] } onChange={this.handleChange}/>
+            <input name={ `day_${index}` } type="checkbox" checked={ this.state.days[index] } onChange={this.handleChange}/>
             <div>{day}</div>
           </label>
         )

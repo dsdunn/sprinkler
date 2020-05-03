@@ -1,12 +1,12 @@
  const cron = require('node-cron');
 
 const db = require('./queries');
-const Program = require('./program');
+const { Program } = require('./program');
 const Queries = require('./queries');
 
 class Clock {
 
-  constructor() {
+  constructor(valveControl) {
     this.current_schedule = null;
     this.today = null,
     this.runProgram = this.runProgram.bind(this);
@@ -14,6 +14,7 @@ class Clock {
     this.getDay = this.getDay.bind(this);
     this.everyMinute = null;
     this.everyHour = null;
+    this.valveControl = valveControl;
   }
 
   init() {
@@ -36,14 +37,13 @@ class Clock {
     let thisMinute = now.getMinutes();
     let nowTime = thisHour + ':' + thisMinute + ':00';
 
-    let result = await Queries.pollSchedules(this.today, nowTime);
-    let todaysSchedules = result;
+    let todaysSchedules = await Queries.pollSchedules(this.today, nowTime);
     let scheduleNow = todaysSchedules.find(schedule => {
-      return schedule.start_time === nowTime;
+      return schedule.start_time === nowTime || null;
     })
+    // console.log(nowTime, todaysSchedules);
     if (scheduleNow) {
-      console.log('scheduleNow: ', scheduleNow);
-      this.runProgram(schedule);
+      this.runProgram(scheduleNow);
     } 
   }
 
@@ -60,7 +60,8 @@ class Clock {
 
   runProgram(schedule) {
     this.current_schedule = schedule;
-    this.program = new Program(schedule)
+    this.program = new Program(schedule, this.valveControl);
+    this.program.init();
   }
 
   stopProgram() {

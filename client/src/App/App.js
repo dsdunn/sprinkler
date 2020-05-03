@@ -7,23 +7,6 @@ import ScheduleEditor from './pages/ScheduleEditor';
 
 import * as api from './api';
 
-const ws = new WebSocket('ws://localhost:8080');
-ws.onopen = () => {
-  console.log('sockets bitch!')
-  ws.send('socket party')
-}
-
-ws.onmessage = (payload) => {
-  let { data } = payload;
-  data = JSON.parse(data);
-
-  if (data.schedule) {
-    this.setState({
-      currentRunningSchedule: data.schedule
-    })
-  }
-}
-
 class App extends Component {
   constructor(props){
     super(props);
@@ -35,9 +18,32 @@ class App extends Component {
   }
 
   componentDidMount = async () => {
+    this.initSocket();
+
     let schedules = await api.getSchedules();
 
     this.setState({ schedules });
+  }
+
+  initSocket() {
+    const ws = new WebSocket('ws://localhost:8080');
+
+    ws.onopen = () => {
+      console.log('sockets bitch!')
+      ws.send('socket party')
+    }
+
+    ws.onmessage = (payload) => {
+      let { data } = payload;
+      data = JSON.parse(data);
+      console.log(data);
+
+      if (data.schedule) {
+        this.setState({
+          currentRunningSchedule: data.schedule
+        })
+      }
+    }
   }
 
   createSchedule = async (schedule) => {
@@ -142,7 +148,7 @@ class App extends Component {
 
         <div className="test">
           Testing
-          <div>{ this.state.currentRunningSchedule }</div>
+          <div>{ this.state.currentRunningSchedule ? this.state.currentRunningSchedule.schedule_name : '' }</div>
           <div onClick={this.createSchedule}>Create Schedule</div>
           <div onClick={this.deleteSchedule}>Delete Schedule</div>
         </div>

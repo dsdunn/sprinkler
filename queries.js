@@ -52,7 +52,6 @@ const putSchedule = (request, response) => {
     .update({schedule_name, start_time, end_time, interval, iterations, duration_per_zone, zones, days}, '*')
     .where({id: id}) 
     .then(result => {
-      console.log('put: ', result);
       response.status(200).json({
         text: 'you have successfully updated schedule' + result[0].schedule_name,
         schedule: result[0]

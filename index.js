@@ -51,23 +51,23 @@ app.listen(port);
 
 console.log('App is listening on port ' + port);
 
-const mainLoop = new Clock;
 const valveControl = new ValveControl;
-
 valveControl.init();
+
+const clock = new Clock(valveControl);
+
 //ValveControl.testAllZones();
 const sendStatus = () => {
-  // console.log(wss.clients);
+  console.log(valveControl.getCurrentlyOnZone());
   wss.clients.forEach((client) => {
-    console.log(valveControl.getCurrentlyOnZone());
     client.send(JSON.stringify({
       zone: valveControl.getCurrentlyOnZone(),
-      schedule: mainLoop.getCurrentSchedule()
+      schedule: clock.getCurrentSchedule()
     }));
   })
 }
 
 setInterval(sendStatus, 5000);
 
-mainLoop.init();
+clock.init();
 

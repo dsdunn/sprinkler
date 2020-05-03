@@ -1,5 +1,4 @@
 const apiFetch = (path, method = 'GET', payload = null) => {
-  console.log('payload: ', payload);
   let body = payload ? JSON.stringify(payload) : null
   return fetch(`/api/v1${path}`, {
     method,

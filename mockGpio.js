@@ -1,11 +1,11 @@
 class mockGpio {
   constructor(pinNumber, level) {
     this.pin = pinNumber;
-    this.value = 1;
+    this.value = 0;
   }
 
-  writeSync(num) {
-    this.value = num;
+  writeSync(level) {
+    this.value = level === "high" ? 0 : 1;
   }
 }
 
