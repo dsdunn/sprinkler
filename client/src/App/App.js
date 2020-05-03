@@ -1,31 +1,32 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
 import './App.css';
 
-import ScheduleArchive from './pages/ScheduleArchive';
-import ScheduleEditor from './pages/ScheduleEditor';
+import ScheduleArchive from './components/ScheduleArchive';
+import ScheduleEditor from './components/ScheduleEditor';
+import Dashboard from './components/Dashboard';
 
 import * as api from './api';
 
-class App extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      currentRunningSchedule: null,
-      schedules: [],
-      selectedSchedule: {}
+const App = (props) => {
+
+  const [ currentRunningSchedule, setCurrentRunningSchedule ] = useState(null);
+  const [ schedules, setSchedules ] = useState([]);
+  const [ selectedSchedule, setSelectedSchedule ] = useState({});
+
+  useEffect(() => {
+    initSocket();
+
+    const getSchedules = async () => {
+      let schedules = await api.getSchedules();
+
+      setSchedules(schedules);
     }
-  }
 
-  componentDidMount = async () => {
-    this.initSocket();
+    getSchedules();
+  },[])
 
-    let schedules = await api.getSchedules();
-
-    this.setState({ schedules });
-  }
-
-  initSocket() {
+  const initSocket = () => {
     const ws = new WebSocket('ws://localhost:8080');
 
     ws.onopen = () => {
@@ -39,68 +40,57 @@ class App extends Component {
       console.log(data);
 
       if (data.schedule) {
-        this.setState({
-          currentRunningSchedule: data.schedule
-        })
+        setCurrentRunningSchedule(data.schedule)
       }
     }
   }
 
-  createSchedule = async (schedule) => {
+  const createSchedule = async (schedule) => {
     let response = await api.createSchedule(schedule);
-    
-    this.setState({
-      schedules: [...this.state.schedules, response.schedule],
-      selectedSchedule: response.schedule
-    })
+
+    setSchedules([...schedules, response.schedule]);
+    setSelectedSchedule(response.schedule);
 
   }
 
-  putSchedule = async (schedule) => {
+  const putSchedule = async (schedule) => {
     let response = await api.putSchedule(schedule);
 
-    this.setState({
-      schedules: [
-      ...this.state.schedules.filter(oldSchedule => {
+    setSchedules([...schedules.filter(oldSchedule => {
         return schedule.id !== oldSchedule.id;
-      }), 
+      }),
       response.schedule
-      ]
-    })
+    ])
   }
 
-  saveSchedule = (schedule = {}) => {
+  const saveSchedule = (schedule = {}) => {
     if (schedule.id) {
-      this.putSchedule(schedule);
+      putSchedule(schedule);
     } else {
-      this.createSchedule(schedule);
+      createSchedule(schedule);
     }
-
   }
 
-  deleteSchedule = async (id) => {
+  const deleteSchedule = async (id) => {
     if (!id) {
       return;
     }
     let response = await api.deleteSchedule(id);
-    let schedules = this.state.schedules.filter(schedule => {
+
+    let newList = schedules.filter(schedule => {
         return schedule.id !== id;
       });
 
-    this.setState({
-      schedules
-    })
+    setSchedules(newList);
   }
 
-  updateSelectedSchedule = (schedule) => {
-    this.setState({
-      selectedSchedule: schedule
-    })
-    this.props.history.push('/edit_schedule')
+  const updateSelectedSchedule = (schedule) => {
+    setSelectedSchedule(schedule);
+    props.history.push('/edit_schedule')
   }
 
-  daysOfTheWeek() {
-    let days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+  const daysOfTheWeek = () => {
+    let days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
     return days.map((day, index) => {
 
@@ -112,49 +102,46 @@ class App extends Component {
     })
   }
 
+  return (
+    <div className="App">
+      <header className="days-of-the-week">
+        { daysOfTheWeek() }
+      </header>
+      <Dashboard props={currentRunningSchedule, schedules}/>
+      <Switch>
+        <Route 
+          exact path='/' 
+          render={(props) => (
+            <ScheduleArchive 
+              {...props} 
+              currentRunningSchedule={currentRunningSchedule}
+              schedules={schedules}
+              updateSelectedSchedule={updateSelectedSchedule}
+            />
+          )}
+        />
+        <Route 
+          exact path='/edit_schedule' 
+          render={(props) => (
+            <ScheduleEditor 
+              {...props} 
+              selectedSchedule={selectedSchedule} 
+              saveSchedule={saveSchedule} 
+              deleteSchedule={deleteSchedule}
+            />
+          )}
+        />
+      </Switch>
 
-  render() {
-
-    return (
-      <div className="App">
-        <header className="days-of-the-week">
-          { this.daysOfTheWeek() }
-        </header>
-
-        <Switch>
-          <Route 
-            exact path='/' 
-            render={(props) => (
-              <ScheduleArchive 
-                {...props} 
-                state={this.state} 
-                updateSelectedSchedule={this.updateSelectedSchedule}
-              />
-            )}
-          />
-          <Route 
-            exact path='/edit_schedule' 
-            render={(props) => (
-              <ScheduleEditor 
-                {...props} 
-                schedules={this.state.schedules} 
-                selectedSchedule={this.state.selectedSchedule} 
-                saveSchedule={this.saveSchedule} 
-                deleteSchedule={this.deleteSchedule}
-              />
-            )}
-          />
-        </Switch>
-
-        <div className="test">
-          Testing
-          <div>{ this.state.currentRunningSchedule ? this.state.currentRunningSchedule.schedule_name : '' }</div>
-          <div onClick={this.createSchedule}>Create Schedule</div>
-          <div onClick={this.deleteSchedule}>Delete Schedule</div>
-        </div>
+      <div className="test">
+        Testing
+        <div>{ currentRunningSchedule ? currentRunningSchedule.schedule_name : '' }</div>
+        <div onClick={createSchedule}>Create Schedule</div>
+        <div onClick={deleteSchedule}>Delete Schedule</div>
       </div>
-    );
-  }
+    </div>
+  );
+  
 }
 
 export default withRouter(App);

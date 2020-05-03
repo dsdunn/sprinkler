@@ -43,7 +43,6 @@ class ValveControl {
   }
 
   zoneOn(zoneNumber) {
-    console.log(this.zones[zoneNumber]);
     if (!this.zones[zoneNumber]) { return };
 
     this.zones[zoneNumber].writeSync(0);
