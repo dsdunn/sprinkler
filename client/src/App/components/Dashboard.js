@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Dashboard = ({currentRunningSchedule, schedules, selectedSchedule, }) => {
+const Dashboard = ({currentRunningSchedule, currentlyOnZone }) => {
 
   const [time, setTime] = useState(null);
 
@@ -35,6 +35,32 @@ const Dashboard = ({currentRunningSchedule, schedules, selectedSchedule, }) => {
     setTimeout(clock, 1000);
   }
 
+  const scheduleDisplay = () => {
+    const namedDays =['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+    if (!currentRunningSchedule) {
+      return (
+        <p>no schedule currently running</p>
+        );
+    } else {
+      let { schedule_name, id, start_time, end_time, duration_per_zone, iterations, interval, zones, days } = currentRunningSchedule;
+
+      zones = zones.join(', ');
+      days = days.map(day => {
+        return namedDays[day];
+      })
+
+      return (
+        <div> 
+          <h2>Currently On Zone: { typeof currentlyOnZone === 'number' ? currentlyOnZone + 1 : 'None'  }</h2>
+          <h2>Currently Running: { schedule_name }</h2>
+          <p>Zones { zones } will each run for { duration_per_zone } minutes, starting at { start_time }, repeating { iterations } time(s) with { interval } minutes between sessions.</p>
+          <p>end time: {end_time}</p>
+        </div>
+        );
+    }
+  }
+
   tick();
 
   return (
@@ -43,7 +69,7 @@ const Dashboard = ({currentRunningSchedule, schedules, selectedSchedule, }) => {
         { time }
       </div>
       <div>
-        { selectedSchedule }
+        { scheduleDisplay()  }
       </div>
 
     </div>

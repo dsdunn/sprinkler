@@ -1,7 +1,7 @@
 const ValveControl = require('./valveControl');
 
 class Program {
-  constructor({ duration_per_zone, zones, iterations, interval }, valveControl) {
+  constructor({ duration_per_zone, zones, iterations, interval }, valveControl, stopProgramCallback) {
     this.valveControl= valveControl;
     this.iterations = iterations;
     this.interval = interval;
@@ -11,6 +11,8 @@ class Program {
     this.running = false;
     this.paused = false;
     this.current_iteration = 1;
+
+    this.stopProgramCallback = stopProgramCallback;
 
     this.killSeries = this.killSeries.bind(this);
     this.loop = this.loop.bind(this);
@@ -45,7 +47,7 @@ class Program {
     this.series = setInterval(zoneControl, this.duration_per_zone * 1000 * 60)
   }
 
-  init() {
+  init(stopEventHandler) {
     this.running = true;
     this.loop();
   }
@@ -61,17 +63,20 @@ class Program {
   }
   stopProgram() {
     this.killSeries();
-    this.valveControl.allOff();
+    this.valveControl.allZonesOff();
     this.running = false;
+    this.stopProgramCallback();
   }
   maybeWait() {
+    console.log('current iteration: ', this.current_iteration)
+    console.log('iterations: ', this.iterations)
     if (this.current_iteration < this.iterations){
       this.current_iteration++;
       this.series = setTimeout(() => {
         this.loop()
-      },this.interval);
+      },this.interval * 60 * 1000);
     } else {
-      this.running = false;
+      this.stopProgram();
     }
   }
 }

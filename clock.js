@@ -15,6 +15,8 @@ class Clock {
     this.everyMinute = null;
     this.everyHour = null;
     this.valveControl = valveControl;
+    this.resetCurrentSchedule = this.resetCurrentSchedule.bind(this);
+    this.getCurrentSchedule = this.getCurrentSchedule.bind(this);
   }
 
   init() {
@@ -41,14 +43,13 @@ class Clock {
     let scheduleNow = todaysSchedules.find(schedule => {
       return schedule.start_time === nowTime || null;
     })
-    // console.log(nowTime, todaysSchedules);
+
     if (scheduleNow) {
       this.runProgram(scheduleNow);
     } 
   }
 
   getDay() {
-    // let days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     let now = new Date();
     
     this.today = now.getDay();
@@ -60,13 +61,17 @@ class Clock {
 
   runProgram(schedule) {
     this.current_schedule = schedule;
-    this.program = new Program(schedule, this.valveControl);
+    this.program = new Program(schedule, this.valveControl, this.resetCurrentSchedule);
     this.program.init();
+  }
+
+  resetCurrentSchedule() {
+    this.current_schedule = null;
   }
 
   stopProgram() {
     this.program.stopProgram()
-    // this.program = null;
+    this.current_schedule = null;
   }
 }
 

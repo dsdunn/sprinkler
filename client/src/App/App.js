@@ -13,6 +13,7 @@ const App = (props) => {
   const [ currentRunningSchedule, setCurrentRunningSchedule ] = useState(null);
   const [ schedules, setSchedules ] = useState([]);
   const [ selectedSchedule, setSelectedSchedule ] = useState({});
+  const [ currentlyOnZone, setCurrentlyOnZone ] = useState(null);
 
   useEffect(() => {
     initSocket();
@@ -34,14 +35,17 @@ const App = (props) => {
       ws.send('socket party')
     }
 
-    ws.onmessage = (payload) => {
-      let { data } = payload;
-      data = JSON.parse(data);
-      console.log(data);
+    ws.onmessage = handleMessage;
+  }
 
-      if (data.schedule) {
-        setCurrentRunningSchedule(data.schedule)
-      }
+  const handleMessage = (payload) => {
+    let { data } = payload;
+
+    data = JSON.parse(data);
+
+    if (currentRunningSchedule === null && data.schedule || currentRunningSchedule !== null && !data.schedule) {
+      setCurrentRunningSchedule(data.schedule);
+      setCurrentlyOnZone(data.zone);
     }
   }
 
@@ -51,6 +55,7 @@ const App = (props) => {
     setSchedules([...schedules, response.schedule]);
     setSelectedSchedule(response.schedule);
 
+    props.history.goBack();
   }
 
   const putSchedule = async (schedule) => {
@@ -63,7 +68,7 @@ const App = (props) => {
     ])
   }
 
-  const saveSchedule = (schedule = {}) => {
+  const saveSchedule = (schedule) => {
     if (schedule.id) {
       putSchedule(schedule);
     } else {
@@ -107,7 +112,10 @@ const App = (props) => {
       <header className="days-of-the-week">
         { daysOfTheWeek() }
       </header>
-      <Dashboard props={currentRunningSchedule, schedules}/>
+      <Dashboard 
+        currentRunningSchedule={currentRunningSchedule}
+        currentlyOnZone={currentlyOnZone}
+      />
       <Switch>
         <Route 
           exact path='/' 

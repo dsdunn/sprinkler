@@ -58,7 +58,7 @@ const clock = new Clock(valveControl);
 
 //ValveControl.testAllZones();
 const sendStatus = () => {
-  console.log(valveControl.getCurrentlyOnZone());
+  console.log(clock.getCurrentSchedule());
   wss.clients.forEach((client) => {
     client.send(JSON.stringify({
       zone: valveControl.getCurrentlyOnZone(),
