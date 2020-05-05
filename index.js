@@ -9,6 +9,12 @@ const db = require('./queries');
 const { Clock } = require('./clock');
 const { ValveControl } = require('./valveControl');
 
+const valveControl = new ValveControl;
+valveControl.init();
+
+const clock = new Clock(valveControl);
+clock.init();
+
 const wss = new WebSocket.Server({ port: 8080 });
 
  
@@ -28,18 +34,26 @@ app.use(bodyParser.urlencoded({
   })
 )
 
-
 app.get('/api/v1/schedules', db.getSchedules);
 app.post('/api/v1/schedules', db.createSchedule);
 app.put('/api/v1/schedules', db.putSchedule);
 app.delete('/api/v1/schedules', db.deleteSchedule);
 
-// getCurrentProgram (maybe push with web-socket to live updates/ count-down?)
-  // set cronjob to push update if socket connection exists
+app.put('/api/v1/run_schedule/:id', async (req, res) => {
+  let { id } = req.params;
+
+  if (!id) {
+    res.status(400).send('invalid id');
+    return;
+  }
+  let nowSchedule = await db.getSingleScheduleToRunNow(id);
+
+  clock.runProgram(nowSchedule);
+});
 
 // stopCurrentProgram
 
-app.get('*', (req,res) => {
+app.get('*', (req, res) => {
   console.log(__dirname);
 	res.sendFile(path.join(__dirname+'/client/build/index.html'));
 });
@@ -51,14 +65,8 @@ app.listen(port);
 
 console.log('App is listening on port ' + port);
 
-const valveControl = new ValveControl;
-valveControl.init();
-
-const clock = new Clock(valveControl);
-
-//ValveControl.testAllZones();
 const sendStatus = () => {
-  console.log(clock.getCurrentSchedule());
+  // console.log(clock.getCurrentSchedule());
   wss.clients.forEach((client) => {
     client.send(JSON.stringify({
       zone: valveControl.getCurrentlyOnZone(),
@@ -68,6 +76,4 @@ const sendStatus = () => {
 }
 
 setInterval(sendStatus, 5000);
-
-clock.init();
 

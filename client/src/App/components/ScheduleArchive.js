@@ -4,12 +4,12 @@ import { Link } from 'react-router-dom';
 import ScheduleCard from './ScheduleCard';
 
 
-const ScheduleArchive = ({ schedules = [], currentlyRunningSchedule = {}, updateSelectedSchedule }) => {
+const ScheduleArchive = ({ schedules = [], currentRunningSchedule = {}, updateSelectedSchedule, runSchedule }) => {
 
   const createSchedules = () => {
     return schedules.map(schedule => {
       return (
-          <ScheduleCard schedule={schedule} key={schedule.id} updateSelectedSchedule={updateSelectedSchedule}/>
+          <ScheduleCard schedule={schedule} key={schedule.id} updateSelectedSchedule={updateSelectedSchedule} runSchedule={runSchedule}/>
         )
     })
   }

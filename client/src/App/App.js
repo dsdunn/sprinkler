@@ -42,6 +42,7 @@ const App = (props) => {
     let { data } = payload;
 
     data = JSON.parse(data);
+    console.log(data);
 
     if (currentRunningSchedule === null && data.schedule || currentRunningSchedule !== null && !data.schedule) {
       setCurrentRunningSchedule(data.schedule);
@@ -94,6 +95,12 @@ const App = (props) => {
     props.history.push('/edit_schedule')
   }
 
+  const runSchedule = async (id) => {
+    let response = await api.putRunSchedule(id);
+    // let result = await response.json();
+    console.log(response);
+  }
+
   const daysOfTheWeek = () => {
     let days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
@@ -125,6 +132,7 @@ const App = (props) => {
               currentRunningSchedule={currentRunningSchedule}
               schedules={schedules}
               updateSelectedSchedule={updateSelectedSchedule}
+              runSchedule={runSchedule}
             />
           )}
         />

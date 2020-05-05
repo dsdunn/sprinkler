@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-const ScheduleCard = ({ schedule, updateSelectedSchedule }) => {
+const ScheduleCard = ({ schedule, updateSelectedSchedule, runSchedule }) => {
   const handleUpdateSelectedSchedule = () => {
     updateSelectedSchedule(schedule)
   }
@@ -11,6 +11,7 @@ const ScheduleCard = ({ schedule, updateSelectedSchedule }) => {
         <div>id: { schedule.id }</div>
       </div>
       <div onClick={ handleUpdateSelectedSchedule }>Edit</div>
+      <div onClick={() => { runSchedule(schedule.id) }}>Run this now</div>
     </div>
   );
 }

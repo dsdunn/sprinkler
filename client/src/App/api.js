@@ -19,17 +19,22 @@ export const getSchedules = async () => {
 }
 
 export const createSchedule = async (schedule) => {
-  let response = await apiFetch('/schedules', 'POST', schedule)
+  let response = await apiFetch('/schedules', 'POST', schedule);
   let results = await response.json();
 
   return results;
 };
 
 export const putSchedule = async (schedule) => {
-  let response = await apiFetch('/schedules', 'PUT', schedule)
+  let response = await apiFetch('/schedules', 'PUT', schedule);
   let results = await response.json();
 
   return results;
+}
+
+export const putRunSchedule = async (id) => {
+  let response = await apiFetch(`/run_schedule/${id}`, 'PUT');
+  return response;
 }
 
 export const deleteSchedule = async (id) => {
