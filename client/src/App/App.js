@@ -8,6 +8,8 @@ import Dashboard from './components/Dashboard';
 
 import * as api from './api';
 
+const ws = new WebSocket('ws://localhost:8080');
+
 const App = (props) => {
 
   const [ currentRunningSchedule, setCurrentRunningSchedule ] = useState(null);
@@ -27,26 +29,33 @@ const App = (props) => {
     getSchedules();
   },[])
 
-  const initSocket = () => {
-    const ws = new WebSocket('ws://localhost:8080');
+  useEffect(() => {
+    ws.onmessage = handleMessage;
+  })
 
+  const initSocket = () => {
     ws.onopen = () => {
       console.log('sockets bitch!')
       ws.send('socket party')
     }
-
-    ws.onmessage = handleMessage;
   }
 
   const handleMessage = (payload) => {
     let { data } = payload;
 
     data = JSON.parse(data);
-    console.log(data);
+    
+    let { zone, schedule } = data;
+    let id = schedule && schedule.id;
+    let currentSchedule = getCurrentRunningSchedule();
+    let currentId = currentSchedule && currentSchedule.id;
 
-    if (currentRunningSchedule === null && data.schedule || currentRunningSchedule !== null && !data.schedule) {
-      setCurrentRunningSchedule(data.schedule);
-      setCurrentlyOnZone(data.zone);
+    if (currentlyOnZone !== zone) {
+      setCurrentlyOnZone(zone);
+    }
+
+    if (currentId != id) {
+      setCurrentRunningSchedule(schedule);
     }
   }
 
@@ -99,6 +108,10 @@ const App = (props) => {
     let response = await api.putRunSchedule(id);
     // let result = await response.json();
     console.log(response);
+  }
+
+  const getCurrentRunningSchedule = () => {
+    return currentRunningSchedule;
   }
 
   const daysOfTheWeek = () => {

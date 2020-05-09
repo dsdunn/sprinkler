@@ -77,6 +77,7 @@ class Program {
       },this.interval * 60 * 1000);
     } else {
       this.stopProgram();
+      console.log('program ended');
     }
   }
 }
