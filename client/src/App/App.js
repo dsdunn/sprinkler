@@ -148,13 +148,6 @@ const App = (props) => {
           )}
         />
       </Switch>
-
-      <div className="test">
-        Testing
-        <div>{ currentRunningSchedule ? currentRunningSchedule.schedule_name : '' }</div>
-        <div onClick={createSchedule}>Create Schedule</div>
-        <div onClick={deleteSchedule}>Delete Schedule</div>
-      </div>
     </div>
   );
   
