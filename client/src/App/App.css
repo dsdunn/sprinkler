@@ -1,4 +1,10 @@
-
+/*body {
+  color: #BCAB79;
+}
+*/
+a {
+  text-decoration: none;
+}
 
 .schedule-editor {
   font-size: 26px;

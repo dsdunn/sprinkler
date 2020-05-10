@@ -10,26 +10,22 @@ import Dashboard from './components/Dashboard';
 
 import * as api from './api';
 
-import { Button, ButtonGroup } from '@material-ui/core';
+import { Button, ButtonGroup, Typography } from '@material-ui/core';
 import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 
 const sprinklerTheme = createMuiTheme({
   palette: {
+    type: 'dark',
+
     primary: {
-      main: '#AFBE8F',
+      main: '#2978A0',
     },
     secondary: {
-      main: '#7D8570',
+      main: '#315659',
     },
-    tertiary: {
-      main: '#646F58'
-    },
-    highlight: {
-      main: '#DDE392'
-    },
-    lowlight: {
-      main: '#504B3A'
+    text: {
+      primary: '#BCAB79'
     }
   },
 });
@@ -37,7 +33,9 @@ const sprinklerTheme = createMuiTheme({
 const useStyles = makeStyles({
   root: {
     boxSizing: 'border-box',
-    height: '100vh',
+    minHeight: '100vh',
+    backgroundColor: '#253031',
+    color: '#BCAB79',
 
     '& .header': {
       display: 'flex',
@@ -173,8 +171,8 @@ const App = (props) => {
         days.map((day, index) => {
 
           return (
-            <Button className="header-day" variant="contained" key={index}>
-              { day }
+            <Button className="header-day" variant="contained" color={'secondary'} key={index}>
+              <Typography color={'textPrimary'} >{ day } </Typography>
             </Button>
             )
         })

@@ -2,11 +2,59 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { Button, ButtonGroup } from '@material-ui/core';
+import { Button, ButtonGroup, Container, Grid } from '@material-ui/core';
+
+
+
+let useStyles = makeStyles((theme) => ({
+  zoneAndTime: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  programGrid: {
+    marginBottom: '2em',
+
+    '& .heading': {
+      textAlign: 'center',
+      marginBottom: '0.4em',
+    },
+    '& .cell': {
+      border: '0.5px solid',
+      padding: '0.5em'
+    },
+    '& .cell > div:first-child': {
+      display: 'flex',
+      alignItems: 'center',
+      paddingRight: '5px',
+      fontSize: '10px',
+      alignItems: 'center'
+    }
+  },
+  noProgram: {
+    textAlign: 'center'
+  },
+  time: {
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: '18px',
+    textAlign: 'right',
+    color: theme.palette.secondary,
+    margin: 'auto'
+  },
+  zoneDisplay: {
+    fontSize: '2em'
+  },
+  create: {
+    margin: '1em',
+    color: 'secondary'
+  }
+}));
+
 
 const Dashboard = ({currentRunningSchedule, currentlyOnZone, updateSelectedSchedule}) => {
 
   const [time, setTime] = useState(null);
+  let classes = useStyles();
 
   const clock = () => {
     var date = new Date();
@@ -31,8 +79,6 @@ const Dashboard = ({currentRunningSchedule, currentlyOnZone, updateSelectedSched
     let timeVal = h + ":" + m + ":" + s + " " + session;
 
     setTime(timeVal);
-
-    
   }
 
   const tick = () => {
@@ -42,71 +88,67 @@ const Dashboard = ({currentRunningSchedule, currentlyOnZone, updateSelectedSched
   const scheduleDisplay = () => {
     const namedDays =['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-    if (!currentRunningSchedule) {
-      return (
-        <p>no schedule currently running</p>
-        );
-    } else {
+    if (currentRunningSchedule) {
       let { schedule_name, id, start_time, end_time, duration_per_zone, iterations, interval, zones, days } = currentRunningSchedule;
 
-      zones = zones.join(', ');
+      zones = zones.map((zone) => zone + 1).join(', ');
       days = days.map(day => {
         return namedDays[day];
       })
 
       return (
-        <div> 
-          <h2>Currently On Zone: { typeof currentlyOnZone === 'number' ? currentlyOnZone + 1 : 'None'  }</h2>
-          <h2>Currently Running: { schedule_name }</h2>
-          <p>Zones { zones } will each run for { duration_per_zone } minutes, starting at { start_time }, repeating { iterations } time(s) with { interval } minutes between sessions.</p>
-          <p>end time: {end_time}</p>
-        </div>
+        <Grid container className={classes.programGrid}>
+          <Grid className="heading" item xs={12}><span>{schedule_name}</span></Grid>
+          <Grid className="cell" item container xs={6}>
+            <Grid xs={6} item>start: </Grid>
+            <Grid xs={6} item>{start_time}</Grid>
+          </Grid>
+          <Grid className="cell" item container xs={6}>
+            <Grid xs={6} item>end: </Grid>
+            <Grid xs={6} item>{`${end_time}`}</Grid>
+          </Grid>
+          <Grid className="cell" item container xs={6}>
+            <Grid xs={6} item>zones: </Grid>
+            <Grid xs={6} item>{`${zones}`}</Grid>
+          </Grid>
+          <Grid className="cell" item container xs={6}>
+            <Grid xs={6} item>per zone: </Grid>
+            <Grid xs={6} item>{`${duration_per_zone} min`}</Grid>
+          </Grid>
+          <Grid className="cell" item container xs={6}>
+            <Grid xs={6} item>iterations: </Grid>
+            <Grid xs={6} item>{`${iterations}`}</Grid>
+          </Grid>
+          <Grid className="cell" item container xs={6}>
+            <Grid xs={6} item>interval: </Grid>
+            <Grid xs={6} item>{`${interval}`}</Grid>
+          </Grid>
+        </Grid> 
+        );
+    } else {
+      return (
+        <p className={classes.noProgram}>no current running program</p>
         );
     }
   }
 
-
-  let useStyles = makeStyles({
-    dashboardInfo: {
-      display: 'flex'
-    },
-    time: {
-      textAlign: 'right',
-      color: 'purple',
-      margin: '0.4rem auto'
-    },
-    feedback: {
-      '& p': { 
-        margin: '0 auto 0.4rem'
-      }
-    },
-    create: {
-      'a': {
-        textDecoration: 'none',
-        color: 'purple'
-      }
-    }
-  })
-
-
-
   tick();
-
-
-  let classes = useStyles();
 
   return (
     <section className="dashboard">
+      <Container>
+          <div className={classes.zoneAndTime}>Zone On: &nbsp; 
+            <span className={classes.zoneDisplay}>{ currentlyOnZone == null ? 'none' : `${currentlyOnZone + 1}` }</span>
+            <span className={classes.time}>
+              { time }
+            </span>
+          </div>
+        { scheduleDisplay()  }
+      </Container>
       <div className={classes.dashboardInfo}>
         <Link to="/edit_schedule">
-          <Button onClick={() => updateSelectedSchedule({})} variation="contained" className={classes.create} >New Program</Button>
+          <Button onClick={() => updateSelectedSchedule({})} variant="contained" className={classes.create} color="primary">New Program</Button>
         </Link>
-        <div className={classes.time}>
-          { time }
-        </div>
-      </div>
-      <div className={classes.feedback}>
-        { scheduleDisplay()  }
       </div>
     </section>
     )
