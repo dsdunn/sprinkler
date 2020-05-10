@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Card } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 
 import ScheduleCard from './ScheduleCard';
 

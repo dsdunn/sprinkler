@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 
 const Dashboard = ({currentRunningSchedule, currentlyOnZone }) => {
 
@@ -61,14 +62,33 @@ const Dashboard = ({currentRunningSchedule, currentlyOnZone }) => {
     }
   }
 
+
+  let useStyles = makeStyles({
+    time: {
+      textAlign: 'right',
+      color: 'purple',
+      margin: '0.4rem auto'
+    },
+    feedback: {
+      '& p': { 
+        margin: '0 auto 0.4rem'
+      }
+    }
+  })
+
+
+
   tick();
+
+
+  let classes = useStyles();
 
   return (
     <div className="dashboard">
-      <div className="clock">
+      <div className={classes.time}>
         { time }
       </div>
-      <div>
+      <div className={classes.feedback}>
         { scheduleDisplay()  }
       </div>
 

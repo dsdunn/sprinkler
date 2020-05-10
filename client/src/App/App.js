@@ -2,11 +2,55 @@ import React, { useState, useEffect } from 'react';
 import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
 import './App.css';
 
+import { CssBaseline, Container } from '@material-ui/core';
+
 import ScheduleArchive from './components/ScheduleArchive';
 import ScheduleEditor from './components/ScheduleEditor';
 import Dashboard from './components/Dashboard';
 
 import * as api from './api';
+
+import { Button, ButtonGroup } from '@material-ui/core';
+import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
+
+const sprinklerTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#AFBE8F',
+    },
+    secondary: {
+      main: '#7D8570',
+    },
+    tertiary: {
+      main: '#646F58'
+    },
+    highlight: {
+      main: '#DDE392'
+    },
+    lowlight: {
+      main: '#504B3A'
+    }
+  },
+});
+
+const useStyles = makeStyles({
+  root: {
+    boxSizing: 'border-box',
+    height: '100vh',
+
+    '& .header': {
+      display: 'flex',
+      height: '15vh',
+      width: '100vw',
+
+      '& .header-day': {
+        flexGrow: 1,
+        height: '100%',
+      }
+    }
+  },
+});
 
 const ws = new WebSocket('ws://localhost:8080');
 
@@ -117,53 +161,66 @@ const App = (props) => {
   const daysOfTheWeek = () => {
     let days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-    return days.map((day, index) => {
+    return (
+      <ButtonGroup className="header">
+      {
+        days.map((day, index) => {
 
-      return (
-        <div className="header-day" key={index}>
-          { day }
-        </div>
-        )
-    })
+          return (
+            <Button className="header-day" variant="contained" key={index}>
+              { day }
+            </Button>
+            )
+        })
+      }
+      </ButtonGroup>
+      )
   }
 
+  const classes = useStyles();
+
   return (
-    <div className="App">
-      <header className="days-of-the-week">
-        { daysOfTheWeek() }
-      </header>
-      <Dashboard 
-        currentRunningSchedule={currentRunningSchedule}
-        currentlyOnZone={currentlyOnZone}
-      />
-      <Switch>
-        <Route 
-          exact path='/' 
-          render={(props) => (
-            <ScheduleArchive 
-              {...props} 
-              currentRunningSchedule={currentRunningSchedule}
-              schedules={schedules}
-              updateSelectedSchedule={updateSelectedSchedule}
-              runSchedule={runSchedule}
+    <ThemeProvider theme={sprinklerTheme} >
+      <div className={`App ${classes.root}`}>
+        <section className="header">
+          { daysOfTheWeek() }
+        </section>
+        <Container >
+          <Dashboard 
+            currentRunningSchedule={currentRunningSchedule}
+            currentlyOnZone={currentlyOnZone}
+          />
+          <Switch>
+            <Route 
+              exact path='/' 
+              render={(props) => (
+                <Container maxWidth="md" backgroundColor="tertiary">
+                  <ScheduleArchive 
+                    {...props} 
+                    currentRunningSchedule={currentRunningSchedule}
+                    schedules={schedules}
+                    updateSelectedSchedule={updateSelectedSchedule}
+                    runSchedule={runSchedule}
+                  />
+                </Container>
+              )}
             />
-          )}
-        />
-        <Route 
-          exact path='/edit_schedule' 
-          render={(props) => (
-            <ScheduleEditor 
-              {...props} 
-              selectedSchedule={selectedSchedule} 
-              saveSchedule={saveSchedule} 
-              deleteSchedule={deleteSchedule}
+            <Route 
+              exact path='/edit_schedule' 
+              render={(props) => (
+                <ScheduleEditor 
+                  {...props} 
+                  selectedSchedule={selectedSchedule} 
+                  saveSchedule={saveSchedule} 
+                  deleteSchedule={deleteSchedule}
+                />
+              )}
             />
-          )}
-        />
-      </Switch>
-    </div>
-  );
-  
+          </Switch>
+        </Container>
+      </div>
+    </ThemeProvider>
+    );
 }
 
 export default withRouter(App);

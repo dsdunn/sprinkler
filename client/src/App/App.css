@@ -1,15 +1,4 @@
-.days-of-the-week {
-  display: flex;
-  border: 1px solid black;
-}
 
-.days-of-the-week > .header-day {
-  flex-grow: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 15vh;
-}
 
 .schedule-editor {
   font-size: 26px;
@@ -36,13 +25,4 @@
 .schedule-form-main {
   display: flex;
   flex-direction: column;
-}
-
-.test {
-  padding: 5rem;
-  /*font-size: 4em;*/
-}
-
-.test div {
-  padding: 7px;
 }
