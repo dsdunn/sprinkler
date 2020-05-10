@@ -131,7 +131,7 @@ const ScheduleEditor = ({ selectedSchedule, saveSchedule, deleteSchedule, ...pro
 
   return (
     <div className="schedule-editor">
-      <h2>Schedule Editor - { schedule.schedule_name || 'New Schedule'}</h2>
+      <h5>{ schedule.schedule_name || 'Another Schedule'}</h5>
       <Link to="/">
         <button>back to schedules</button>
       </Link>

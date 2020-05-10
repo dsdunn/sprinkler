@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
+import { Route, Switch, Redirect, withRouter, Link } from 'react-router-dom';
 import './App.css';
 
 import { CssBaseline, Container } from '@material-ui/core';
@@ -50,6 +50,12 @@ const useStyles = makeStyles({
       }
     }
   },
+  nav: {
+    display: 'flex'
+  },
+  '& a': {
+    textDecoration: 'none'
+  }
 });
 
 const ws = new WebSocket('ws://localhost:8080');
@@ -185,16 +191,19 @@ const App = (props) => {
         <section className="header">
           { daysOfTheWeek() }
         </section>
+        <Dashboard 
+          className={classes.nav}
+          currentRunningSchedule={currentRunningSchedule}
+          currentlyOnZone={currentlyOnZone}
+          updateSelectedSchedule={updateSelectedSchedule}
+        >
+        </Dashboard>
         <Container >
-          <Dashboard 
-            currentRunningSchedule={currentRunningSchedule}
-            currentlyOnZone={currentlyOnZone}
-          />
           <Switch>
             <Route 
               exact path='/' 
               render={(props) => (
-                <Container maxWidth="md" backgroundColor="tertiary">
+                <Container maxWidth="md" background="tertiary">
                   <ScheduleArchive 
                     {...props} 
                     currentRunningSchedule={currentRunningSchedule}

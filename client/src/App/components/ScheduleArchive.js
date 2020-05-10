@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Box } from '@material-ui/core';
 
 import ScheduleCard from './ScheduleCard';
@@ -17,14 +16,6 @@ const ScheduleArchive = ({ schedules = [], currentRunningSchedule = {}, updateSe
 
   return (
     <div className="schedule-archive">
-      <div>
-        <h2>
-          Check out all your sweet schedules
-        </h2>
-        <Link to="/edit_schedule">
-          <button onClick={() => updateSelectedSchedule({})}>Create New Schedule</button>
-        </Link>
-      </div>
       <main>
         { createSchedules() }
       </main>

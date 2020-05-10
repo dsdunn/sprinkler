@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles({
   root: {
     minWidth: 275,
-    margin: '3em auto'
+    margin: '1em auto'
   }
 });
 
@@ -15,7 +15,6 @@ const ScheduleCard = ({ schedule, updateSelectedSchedule, runSchedule }) => {
   }
 
   const classes = useStyles();
-  console.log(classes);
 
   return (
     <Card className={classes.root}>

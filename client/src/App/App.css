@@ -2,7 +2,7 @@
 
 .schedule-editor {
   font-size: 26px;
-  padding: 4rem;
+  /*padding: 4rem;*/
 }
 
 .schedule-form-days-of-week {
@@ -26,3 +26,4 @@
   display: flex;
   flex-direction: column;
 }
+

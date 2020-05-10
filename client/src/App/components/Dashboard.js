@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 
-const Dashboard = ({currentRunningSchedule, currentlyOnZone }) => {
+import { Button, ButtonGroup } from '@material-ui/core';
+
+const Dashboard = ({currentRunningSchedule, currentlyOnZone, updateSelectedSchedule}) => {
 
   const [time, setTime] = useState(null);
 
@@ -64,6 +67,9 @@ const Dashboard = ({currentRunningSchedule, currentlyOnZone }) => {
 
 
   let useStyles = makeStyles({
+    dashboardInfo: {
+      display: 'flex'
+    },
     time: {
       textAlign: 'right',
       color: 'purple',
@@ -72,6 +78,12 @@ const Dashboard = ({currentRunningSchedule, currentlyOnZone }) => {
     feedback: {
       '& p': { 
         margin: '0 auto 0.4rem'
+      }
+    },
+    create: {
+      'a': {
+        textDecoration: 'none',
+        color: 'purple'
       }
     }
   })
@@ -84,15 +96,19 @@ const Dashboard = ({currentRunningSchedule, currentlyOnZone }) => {
   let classes = useStyles();
 
   return (
-    <div className="dashboard">
-      <div className={classes.time}>
-        { time }
+    <section className="dashboard">
+      <div className={classes.dashboardInfo}>
+        <Link to="/edit_schedule">
+          <Button onClick={() => updateSelectedSchedule({})} variation="contained" className={classes.create} >New Program</Button>
+        </Link>
+        <div className={classes.time}>
+          { time }
+        </div>
       </div>
       <div className={classes.feedback}>
         { scheduleDisplay()  }
       </div>
-
-    </div>
+    </section>
     )
 
 }
