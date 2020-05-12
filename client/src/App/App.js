@@ -24,8 +24,14 @@ const sprinklerTheme = createMuiTheme({
     secondary: {
       main: '#315659',
     },
+    info: {
+      main: '#B4534D',
+    },
     text: {
-      primary: '#BCAB79'
+      primary: '#BCAB79',
+    },
+    button: {
+      warning: 'red'
     }
   },
 });

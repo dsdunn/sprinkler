@@ -1,7 +1,11 @@
-/*body {
-  color: #BCAB79;
+.flex {
+  display: flex;
 }
-*/
+
+.space-evenly {
+  justify-content: space-evenly;
+}
+
 a {
   text-decoration: none;
 }
@@ -26,6 +30,7 @@ a {
 
 .schedule-archive {
   color: #7688;
+  overflow: scroll;
 }
 
 .schedule-form-main {

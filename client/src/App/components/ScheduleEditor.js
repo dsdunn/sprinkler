@@ -1,6 +1,8 @@
 import React, { useReducer, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
+import { Button, TextField, Typography } from '@material-ui/core';
+
 import { calculateEndTime } from '../../utils.js';
 
 const ScheduleEditor = ({ selectedSchedule, saveSchedule, deleteSchedule, ...props }) => {
@@ -8,7 +10,7 @@ const ScheduleEditor = ({ selectedSchedule, saveSchedule, deleteSchedule, ...pro
 
   let scheduleToEdit = {
     id: id || null,
-    schedule_name: schedule_name || 'New Schedule',
+    schedule_name: schedule_name || '',
     start_time: start_time || '06:00',
     end_time: end_time || '06:00',
     interval: interval || 1,
@@ -75,7 +77,7 @@ const ScheduleEditor = ({ selectedSchedule, saveSchedule, deleteSchedule, ...pro
       zones.push(
           <label htmlFor={`zone_${i + 1}`} key={i}>
             <input type="checkbox" name={`zone_${i + 1}`} checked={schedule.zones.includes(i)} onChange={handleChange} />
-            { `Zone ${i + 1}` }
+            <div>{ `${i + 1}` }</div>
           </label>
         )
     }
@@ -131,48 +133,76 @@ const ScheduleEditor = ({ selectedSchedule, saveSchedule, deleteSchedule, ...pro
 
   return (
     <div className="schedule-editor">
-      <h5>{ schedule.schedule_name || 'Another Schedule'}</h5>
       <Link to="/">
-        <button>back to schedules</button>
+        <Button variant="contained">Back</Button>
       </Link>
       <section className="schedule-editor-main">
         <form className="schedule-form-main">
-          <label htmlFor="schedule_name">
-            Schedule Name:
-            <input name="schedule_name" value={schedule.schedule_name || '' } onChange={handleChange}/>
-          </label>
-          <label htmlFor="start_time">
-            Start Time:
-            <input name="start_time" type="time" value={schedule.start_time} onChange={handleChange}/>
-          </label>
-          <div>
-            <p>
+          <TextField 
+            id="program-name-input"
+            name="schedule_name"
+            variant="outlined" 
+            placeholder="program name" 
+            value={schedule.schedule_name || '' } 
+            onChange={handleChange}
+          />
+          <TextField
+            id="start-time-input"
+            name="start_time"
+            label="start time"
+            type="time"
+            value={schedule.start_time}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            inputProps={{
+              step: 300, // 5 min
+            }}
+            onChange={handleChange}
+          />
+          <Typography>
               end time: { schedule.end_time }
-            </p>
+          </Typography>
+          <TextField
+            label="iterations"
+            id="iterations-input"
+            name="iterations" 
+            type="number" 
+            min="0" 
+            max="60" 
+            value={schedule.iterations} 
+            onChange={handleChange}
+          />
+          <TextField
+            label="interval"
+            id="interval-input"
+            name="interval" 
+            type="number" 
+            min="0" 
+            max="60" 
+            value={schedule.interval} 
+            onChange={handleChange}
+          />
+          <TextField
+            label="duration per zone"
+            id="duration-input"
+            name="duration_per_zone" 
+            type="number" 
+            min="1" 
+            max="30" 
+            value={schedule.duration_per_zone} 
+            onChange={handleChange}
+          />
+          <div className="schedule-form-days-of-week">
+            {createDays()}
           </div>
-          <label htmlFor="interval">
-            Interval:
-            <input name="interval" type="number" min="0" max="300" value={schedule.interval} onChange={handleChange}/>
-          </label>
-          <label htmlFor="iterations">
-            Iterations:
-            <input name="iterations" type="number" min="1" max="20" value={schedule.iterations} onChange={handleChange}/>
-          </label>
-        </form>
-        <form className="schedule-form-days-of-week">
-          {createDays()}
-        </form>
-        <form className="schedule-form-program">
-          <h4>Pattern</h4>
-          <label htmlFor="duration_per_zone">
-            <input type="number" min="1" max="30" name="duration_per_zone" value={schedule.duration_per_zone} onChange={handleChange}/>
-            minutes per zone
-          </label>
-          <fieldset>
+          <div className="flex space-evenly">
           { createZones() }
-          </fieldset>
-          <button onClick={updateSchedule}>Save Schedule</button>
-          <button onClick={removeSchedule}>Delete</button>
+          </div>
+          <div className="flex space-evenly">
+            <Button variant="contained" color="primary" onClick={updateSchedule}>Save Schedule</Button>
+            <Button variant="contained" color="theme.pallete.button.warning" onClick={removeSchedule}>Delete</Button>
+          </div>
         </form>
       </section>
     </div>
