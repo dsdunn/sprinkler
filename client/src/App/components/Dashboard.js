@@ -2,32 +2,34 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { Button, ButtonGroup, Container, Grid } from '@material-ui/core';
+import { Button, ButtonGroup, Container, Grid, Typography } from '@material-ui/core';
 
 
 
 let useStyles = makeStyles((theme) => ({
   zoneAndTime: {
     display: 'flex',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
   },
   programGrid: {
-    marginBottom: '2em',
+    marginBottom: '0.5em',
 
     '& .heading': {
       textAlign: 'center',
       marginBottom: '0.4em',
     },
     '& .cell': {
-      border: '0.5px solid',
-      padding: '0.5em'
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      fontSize: '2.1em',
+      height: '100%'
     },
     '& .cell > div:first-child': {
-      display: 'flex',
       alignItems: 'center',
       paddingRight: '5px',
-      fontSize: '10px',
-      alignItems: 'center'
+      fontSize: '14px',
     }
   },
   noProgram: {
@@ -35,19 +37,27 @@ let useStyles = makeStyles((theme) => ({
   },
   time: {
     display: 'flex',
+    justifyContent: 'flex-end',
+    flexGrow: 1,
     alignItems: 'center',
-    fontSize: '18px',
-    textAlign: 'right',
-    color: theme.palette.secondary,
-    margin: 'auto'
+    fontSize: '28px',
+    color: theme.palette.secondary
   },
   zoneDisplay: {
-    fontSize: '2em'
+    textAlign: 'left',
+    fontSize: '2em',
+    flexGrow: 1,
   },
   create: {
-    margin: '1em',
-    color: 'secondary'
+    margin: '0.5em',
+    color: 'secondary',
+  },
+  buttonContainer: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
   }
+
 }));
 
 
@@ -99,29 +109,29 @@ const Dashboard = ({currentRunningSchedule, currentlyOnZone, updateSelectedSched
       return (
         <Grid container className={classes.programGrid}>
           <Grid className="heading" item xs={12}><span>{schedule_name}</span></Grid>
-          <Grid className="cell" item container xs={6}>
-            <Grid xs={6} item>start: </Grid>
-            <Grid xs={6} item>{start_time}</Grid>
+          <Grid className="cell" item container xs={12}>
+            <div>zones: </div>
+            <div>{zones}</div>
+          </Grid>
+          <Grid className="cell" item container xs={4}>
+            <div>per zone: </div>
+            <div>{duration_per_zone}</div>
+          </Grid>
+          <Grid className="cell" item container xs={4}>
+            <div>iterations: </div>
+            <div>{iterations}</div>
+          </Grid>
+          <Grid className="cell" item container xs={4}>
+            <div>interval: </div>
+            <div>{interval}</div>
           </Grid>
           <Grid className="cell" item container xs={6}>
-            <Grid xs={6} item>end: </Grid>
-            <Grid xs={6} item>{`${end_time}`}</Grid>
+            <div>start: </div>
+            <div>{start_time}</div>
           </Grid>
           <Grid className="cell" item container xs={6}>
-            <Grid xs={6} item>zones: </Grid>
-            <Grid xs={6} item>{`${zones}`}</Grid>
-          </Grid>
-          <Grid className="cell" item container xs={6}>
-            <Grid xs={6} item>per zone: </Grid>
-            <Grid xs={6} item>{`${duration_per_zone} min`}</Grid>
-          </Grid>
-          <Grid className="cell" item container xs={6}>
-            <Grid xs={6} item>iterations: </Grid>
-            <Grid xs={6} item>{`${iterations}`}</Grid>
-          </Grid>
-          <Grid className="cell" item container xs={6}>
-            <Grid xs={6} item>interval: </Grid>
-            <Grid xs={6} item>{`${interval}`}</Grid>
+            <div>end: </div>
+            <div>{end_time}</div>
           </Grid>
         </Grid> 
         );
@@ -132,13 +142,32 @@ const Dashboard = ({currentRunningSchedule, currentlyOnZone, updateSelectedSched
     }
   }
 
+  const daysOfTheWeek = () => {
+    let days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+    return (
+      <ButtonGroup className="daysOfTheWeek">
+      {
+        days.map((day, index) => {
+
+          return (
+            <Button className="header-day" variant="contained" color={'secondary'} key={index}>
+              <Typography color={'textPrimary'} >{ day } </Typography>
+            </Button>
+            )
+        })
+      }
+      </ButtonGroup>
+      )
+  }
+
   tick();
 
   return (
-    <section className="dashboard">
+    <section className="dashboard top">
       <Container>
-          <div className={classes.zoneAndTime}>Zone On: &nbsp; 
-            <span className={classes.zoneDisplay}>{ currentlyOnZone == null ? 'none' : `${currentlyOnZone + 1}` }</span>
+          <div className={classes.zoneAndTime}> 
+            <span className={classes.zoneDisplay}>{ currentlyOnZone != null && `zone ${currentlyOnZone + 1} on`} </span>
             <span className={classes.time}>
               { time }
             </span>
@@ -146,9 +175,12 @@ const Dashboard = ({currentRunningSchedule, currentlyOnZone, updateSelectedSched
         { scheduleDisplay()  }
       </Container>
       <div className={classes.dashboardInfo}>
-        <Link to="/edit_schedule">
+        <Link to="/edit_schedule" className={classes.buttonContainer}>
           <Button onClick={() => updateSelectedSchedule({})} variant="contained" className={classes.create} color="primary">New Program</Button>
         </Link>
+        <div className="header">
+          { daysOfTheWeek() }
+        </div>
       </div>
     </section>
     )

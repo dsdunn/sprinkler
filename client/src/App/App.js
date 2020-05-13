@@ -39,27 +39,36 @@ const sprinklerTheme = createMuiTheme({
 const useStyles = makeStyles({
   root: {
     boxSizing: 'border-box',
-    minHeight: '100vh',
+    minHeight: '110vh',
     backgroundColor: '#253031',
     color: '#BCAB79',
 
-    '& .header': {
+    '& .daysOfTheWeek': {
       display: 'flex',
-      height: '15vh',
+      height: '7vh',
       width: '100vw',
 
       '& .header-day': {
         flexGrow: 1,
         height: '100%',
       }
-    }
+    },
+    '& .scheduleArchive': {
+      paddingTop: '35vh',
+      overflow: 'scroll'
+    },
+    '& .top': {
+      position: 'fixed',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      height: '35vh',
+      backgroundColor: '#253031',
+    },
+    '& a': {
+      textDecoration: 'none'
+    },
   },
-  nav: {
-    display: 'flex'
-  },
-  '& a': {
-    textDecoration: 'none'
-  }
 });
 
 const ws = new WebSocket('ws://localhost:8080');
@@ -168,40 +177,16 @@ const App = (props) => {
     return currentRunningSchedule;
   }
 
-  const daysOfTheWeek = () => {
-    let days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-
-    return (
-      <ButtonGroup className="header">
-      {
-        days.map((day, index) => {
-
-          return (
-            <Button className="header-day" variant="contained" color={'secondary'} key={index}>
-              <Typography color={'textPrimary'} >{ day } </Typography>
-            </Button>
-            )
-        })
-      }
-      </ButtonGroup>
-      )
-  }
-
   const classes = useStyles();
 
   return (
     <ThemeProvider theme={sprinklerTheme} >
       <div className={`App ${classes.root}`}>
-        <section className="header">
-          { daysOfTheWeek() }
-        </section>
         <Dashboard 
-          className={classes.nav}
           currentRunningSchedule={currentRunningSchedule}
           currentlyOnZone={currentlyOnZone}
           updateSelectedSchedule={updateSelectedSchedule}
-        >
-        </Dashboard>
+        />
         <Container >
           <Switch>
             <Route 
@@ -210,7 +195,6 @@ const App = (props) => {
                 <Container maxWidth="md" background="tertiary">
                   <ScheduleArchive 
                     {...props} 
-                    currentRunningSchedule={currentRunningSchedule}
                     schedules={schedules}
                     updateSelectedSchedule={updateSelectedSchedule}
                     runSchedule={runSchedule}

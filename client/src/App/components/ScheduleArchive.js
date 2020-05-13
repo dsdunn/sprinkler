@@ -15,11 +15,9 @@ const ScheduleArchive = ({ schedules = [], currentRunningSchedule = {}, updateSe
   }
 
   return (
-    <div className="schedule-archive">
-      <main>
-        { createSchedules() }
-      </main>
-    </div>
+    <main className="scheduleArchive">
+      { createSchedules() }
+    </main>
   );
 }
 export default ScheduleArchive;
