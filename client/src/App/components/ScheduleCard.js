@@ -9,9 +9,9 @@ const useStyles = makeStyles({
   }
 });
 
-export const ScheduleCard = ({ schedule, updateSelectedSchedule, runSchedule }) => {
-  const handleUpdateSelectedSchedule = () => {
-    updateSelectedSchedule(schedule)
+export const ScheduleCard = ({ schedule, editSchedule, runSchedule }) => {
+  const handleEditSchedule = () => {
+    editSchedule(schedule)
   }
 
   const classes = useStyles();
@@ -22,7 +22,7 @@ export const ScheduleCard = ({ schedule, updateSelectedSchedule, runSchedule }) 
           { schedule.schedule_name }
           <div>id: { schedule.id }</div>
         </div>
-        <div onClick={ handleUpdateSelectedSchedule }>Edit</div>
+        <div onClick={ handleEditSchedule }>Edit</div>
         <div onClick={() => { runSchedule(schedule.id) }}>Run this now</div>
     </Card>
   );

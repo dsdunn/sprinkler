@@ -7,14 +7,14 @@ import { ScheduleCard } from './ScheduleCard';
 import { DaysOfTheWeek } from './DaysOfTheWeek';
 
 
-const ScheduleArchive = ({ schedules = [], currentRunningSchedule = {}, updateSelectedSchedule, runSchedule }) => {
+const ScheduleArchive = ({ schedules = [], currentRunningSchedule = {}, setSelectedSchedule, editSchedule, runSchedule }) => {
 
   let [ filter, setFilter ] = useState([]);
 
   const createSchedules = () => {
     return schedules.map(schedule => {
       return (
-          <ScheduleCard schedule={schedule} key={schedule.id} updateSelectedSchedule={updateSelectedSchedule} runSchedule={runSchedule}/>
+          <ScheduleCard schedule={schedule} key={schedule.id} editSchedule={editSchedule} runSchedule={runSchedule}/>
         )
     })
   }

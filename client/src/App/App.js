@@ -172,9 +172,9 @@ const App = (props) => {
     setSchedules(newList);
   }
 
-  const updateSelectedSchedule = (schedule) => {
+  const editSchedule = (schedule) => {
     setSelectedSchedule(schedule);
-    props.history.push('/edit_schedule')
+    props.history.push('/program')
   }
 
   const runSchedule = async (id) => {
@@ -199,8 +199,9 @@ const App = (props) => {
               <ScheduleArchive 
                 {...props} 
                 schedules={schedules}
-                updateSelectedSchedule={updateSelectedSchedule}
+                editSchedule={editSchedule}
                 runSchedule={runSchedule}
+                setSelectedSchedule={setSelectedSchedule}
               />
             )}
           />
@@ -214,7 +215,8 @@ const App = (props) => {
                 deleteSchedule={deleteSchedule}
                 currentRunningSchedule={currentRunningSchedule}
                 currentlyOnZone={currentlyOnZone}
-                updateSelectedSchedule={updateSelectedSchedule}
+                editSchedule={editSchedule}
+                setSelectedSchedule={setSelectedSchedule}
               />
             )}
           />

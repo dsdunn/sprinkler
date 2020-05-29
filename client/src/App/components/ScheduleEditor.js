@@ -8,7 +8,7 @@ import { Zones } from './Zones';
 
 import { calculateEndTime } from '../../utils.js';
 
-const ScheduleEditor = ({ selectedSchedule, saveSchedule, deleteSchedule, ...props }) => {
+const ScheduleEditor = ({ selectedSchedule, saveSchedule, deleteSchedule, setSelectedSchedule, ...props }) => {
   let { id, schedule_name, start_time, end_time, interval, iterations, duration_per_zone, zones, days } = selectedSchedule;
 
   let scheduleToEdit = {
@@ -58,20 +58,6 @@ const ScheduleEditor = ({ selectedSchedule, saveSchedule, deleteSchedule, ...pro
     }
     setEndTime({ [name]: value });
   }
-
-
-  // const createDays = () => {
-  //   let dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-  //   return dayNames.map((day, index) => {
-  //     return (
-  //         <label htmlFor={day} key={index}>
-  //           <input name={ `day_${index}` } type="checkbox" checked={ schedule.days[index] } onChange={handleChange}/>
-  //           <div>{day}</div>
-  //         </label>
-  //       )
-  //   })
-  // }
 
   // const createZones = () => {
   //   let zones = [];
@@ -143,7 +129,12 @@ const ScheduleEditor = ({ selectedSchedule, saveSchedule, deleteSchedule, ...pro
         />
         <div className="button-container">
           <Link to="/">
-            <Button variant="contained" className="new-program-button control-button" color="primary">Back</Button>
+            <Button 
+              variant="contained"
+              className="new-program-button control-button"
+              color="primary"
+              onClick={() => setSelectedSchedule({})}>
+            Back</Button>
           </Link>
           <Button variant="contained" color="secondary" className="stop-button  control-button" color="secondary">Stop</Button>
           <Button variant="contained" color="secondary" className="run-button  control-button" color="secondary">Run</Button>
