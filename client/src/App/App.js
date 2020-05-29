@@ -43,9 +43,9 @@ const useStyles = makeStyles({
     backgroundColor: '#253031',
     color: '#BCAB79',
 
-    '& .daysOfTheWeek': {
+    '& .days-of-the-week': {
       display: 'flex',
-      height: '7vh',
+      height: '10vh',
       width: '100vw',
 
       '& .header-day': {
@@ -53,21 +53,31 @@ const useStyles = makeStyles({
         height: '100%',
       }
     },
-    '& .scheduleArchive': {
-      paddingTop: '35vh',
-      overflow: 'scroll'
+    '& .schedule-archive': {
+      overflow: 'scroll',
+    },
+    '& .schedule-container': {
+      paddingTop: '20vh'
     },
     '& .top': {
       position: 'fixed',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      height: '35vh',
-      backgroundColor: '#253031',
+      zIndex: '20',
+      backgroundColor: '#253031'
     },
     '& a': {
       textDecoration: 'none'
     },
+    '& .button-container': {
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'space-evenly',
+      alignItems: 'center',
+    },
+    '& .control-button': {
+      width: '90px',
+      margin: '1em 0',
+      // padding: '0.5em 2em'
+    }
   },
 });
 
@@ -182,39 +192,33 @@ const App = (props) => {
   return (
     <ThemeProvider theme={sprinklerTheme} >
       <div className={`App ${classes.root}`}>
-        <Dashboard 
-          currentRunningSchedule={currentRunningSchedule}
-          currentlyOnZone={currentlyOnZone}
-          updateSelectedSchedule={updateSelectedSchedule}
-        />
-        <Container >
-          <Switch>
-            <Route 
-              exact path='/' 
-              render={(props) => (
-                <Container maxWidth="md" background="tertiary">
-                  <ScheduleArchive 
-                    {...props} 
-                    schedules={schedules}
-                    updateSelectedSchedule={updateSelectedSchedule}
-                    runSchedule={runSchedule}
-                  />
-                </Container>
-              )}
-            />
-            <Route 
-              exact path='/edit_schedule' 
-              render={(props) => (
-                <ScheduleEditor 
-                  {...props} 
-                  selectedSchedule={selectedSchedule} 
-                  saveSchedule={saveSchedule} 
-                  deleteSchedule={deleteSchedule}
-                />
-              )}
-            />
-          </Switch>
-        </Container>
+        <Switch>
+          <Route 
+            exact path='/' 
+            render={(props) => (
+              <ScheduleArchive 
+                {...props} 
+                schedules={schedules}
+                updateSelectedSchedule={updateSelectedSchedule}
+                runSchedule={runSchedule}
+              />
+            )}
+          />
+          <Route 
+            exact path='/program' 
+            render={(props) => (
+              <ScheduleEditor 
+                {...props} 
+                selectedSchedule={selectedSchedule} 
+                saveSchedule={saveSchedule} 
+                deleteSchedule={deleteSchedule}
+                currentRunningSchedule={currentRunningSchedule}
+                currentlyOnZone={currentlyOnZone}
+                updateSelectedSchedule={updateSelectedSchedule}
+              />
+            )}
+          />
+        </Switch>
       </div>
     </ThemeProvider>
     );

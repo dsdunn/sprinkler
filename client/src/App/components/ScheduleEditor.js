@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 
 import { Button, TextField, Typography } from '@material-ui/core';
 
+import { DaysOfTheWeek } from './DaysOfTheWeek';
+import { Zones } from './Zones';
+
 import { calculateEndTime } from '../../utils.js';
 
 const ScheduleEditor = ({ selectedSchedule, saveSchedule, deleteSchedule, ...props }) => {
@@ -27,6 +30,21 @@ const ScheduleEditor = ({ selectedSchedule, saveSchedule, deleteSchedule, ...pro
     })
   };
 
+  const initDays = (schedule) => {
+    let days = schedule.days || [];
+
+    let newDays = new Array(7);
+
+    for (let i = 0; i < 7; i++) {
+      newDays[i] = days.includes(i);
+    }
+    schedule.days = newDays;
+
+    return schedule;
+  }
+
+  const [ schedule, dispatch ] = useReducer(reducer, scheduleToEdit, initDays);
+
   const handleChange = (event) => {
     let { name, value } = event.target;
 
@@ -42,47 +60,32 @@ const ScheduleEditor = ({ selectedSchedule, saveSchedule, deleteSchedule, ...pro
   }
 
 
-  const initDays = (schedule) => {
-    days = schedule.days || [];
+  // const createDays = () => {
+  //   let dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-    let newDays = new Array(7);
+  //   return dayNames.map((day, index) => {
+  //     return (
+  //         <label htmlFor={day} key={index}>
+  //           <input name={ `day_${index}` } type="checkbox" checked={ schedule.days[index] } onChange={handleChange}/>
+  //           <div>{day}</div>
+  //         </label>
+  //       )
+  //   })
+  // }
 
-    for (let i = 0; i < 7; i++) {
-      newDays[i] = days.includes(i);
-    }
-    schedule.days = newDays;
+  // const createZones = () => {
+  //   let zones = [];
 
-    return schedule;
-  }
-
-  const [ schedule, dispatch ] = useReducer(reducer, scheduleToEdit, initDays);
-
-  const createDays = () => {
-    let dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-    return dayNames.map((day, index) => {
-      return (
-          <label htmlFor={day} key={index}>
-            <input name={ `day_${index}` } type="checkbox" checked={ schedule.days[index] } onChange={handleChange}/>
-            <div>{day}</div>
-          </label>
-        )
-    })
-  }
-
-  const createZones = () => {
-    let zones = [];
-
-    for (let i = 0; i < 6; i++) {
-      zones.push(
-          <label htmlFor={`zone_${i + 1}`} key={i}>
-            <input type="checkbox" name={`zone_${i + 1}`} checked={schedule.zones.includes(i)} onChange={handleChange} />
-            <div>{ `${i + 1}` }</div>
-          </label>
-        )
-    }
-    return zones;
-  }
+  //   for (let i = 0; i < 6; i++) {
+  //     zones.push(
+  //         <label htmlFor={`zone_${i + 1}`} key={i}>
+  //           <input type="checkbox" name={`zone_${i + 1}`} checked={schedule.zones.includes(i)} onChange={handleChange} />
+  //           <div>{ `${i + 1}` }</div>
+  //         </label>
+  //       )
+  //   }
+  //   return zones;
+  // }
 
 
   const updateSchedule = (event) => {
@@ -132,11 +135,21 @@ const ScheduleEditor = ({ selectedSchedule, saveSchedule, deleteSchedule, ...pro
   }
 
   return (
-    <div className="schedule-editor">
-      <Link to="/">
-        <Button variant="contained">Back</Button>
-      </Link>
-      <section className="schedule-editor-main">
+    <main className="schedule-editor">
+      <section className="top">
+        <DaysOfTheWeek 
+          selectedSchedule={selectedSchedule}
+          updateSchedule={updateSchedule} 
+        />
+        <div className="button-container">
+          <Link to="/">
+            <Button variant="contained" className="new-program-button control-button" color="primary">Back</Button>
+          </Link>
+          <Button variant="contained" color="secondary" className="stop-button  control-button" color="secondary">Stop</Button>
+          <Button variant="contained" color="secondary" className="run-button  control-button" color="secondary">Run</Button>
+        </div>
+      </section>
+      <section className="schedule-container">
         <form className="schedule-form-main">
           <TextField 
             id="program-name-input"
@@ -193,19 +206,19 @@ const ScheduleEditor = ({ selectedSchedule, saveSchedule, deleteSchedule, ...pro
             value={schedule.duration_per_zone} 
             onChange={handleChange}
           />
-          <div className="schedule-form-days-of-week">
+          {/*<div className="schedule-form-days-of-week">
             {createDays()}
-          </div>
-          <div className="flex space-evenly">
+          </div>*/}
+          {/*<div className="flex space-evenly">
           { createZones() }
-          </div>
+          </div>*/}
           <div className="flex space-evenly">
             <Button variant="contained" color="primary" onClick={updateSchedule}>Save Schedule</Button>
             <Button variant="contained" color="theme.pallete.button.warning" onClick={removeSchedule}>Delete</Button>
           </div>
         </form>
       </section>
-    </div>
+    </main>
   );
 }
 export default ScheduleEditor;

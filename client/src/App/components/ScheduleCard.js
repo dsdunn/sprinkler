@@ -9,7 +9,7 @@ const useStyles = makeStyles({
   }
 });
 
-const ScheduleCard = ({ schedule, updateSelectedSchedule, runSchedule }) => {
+export const ScheduleCard = ({ schedule, updateSelectedSchedule, runSchedule }) => {
   const handleUpdateSelectedSchedule = () => {
     updateSelectedSchedule(schedule)
   }
@@ -27,6 +27,3 @@ const ScheduleCard = ({ schedule, updateSelectedSchedule, runSchedule }) => {
     </Card>
   );
 }
-
-
-export default ScheduleCard;
