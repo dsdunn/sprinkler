@@ -2,11 +2,37 @@ import React, { useReducer, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Button, TextField, Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
 import { DaysOfTheWeek } from './DaysOfTheWeek';
 import { Zones } from './Zones';
 
 import { calculateEndTime } from '../../utils.js';
+
+const useStyles = makeStyles({
+  editor: {
+    '& > *' : {
+      marginTop: '1em',
+    },
+    '& .flex-full': {
+      display: 'flex',
+      width: '100%'
+    },
+    '& .w-full': {
+      width: '100%'
+    },
+    '& input': {
+      textAlign: 'center'
+    },
+    '& .zones-title': {
+      textAlign: 'center',
+      fontSize: '12px'
+    },
+    '& .active': {
+      background: 'orange'
+    }
+  }
+})
 
 const ScheduleEditor = ({ selectedSchedule, saveSchedule, deleteSchedule, setSelectedSchedule, ...props }) => {
   let { id, schedule_name, start_time, end_time, interval, iterations, duration_per_zone, zones, days } = selectedSchedule;
@@ -16,7 +42,7 @@ const ScheduleEditor = ({ selectedSchedule, saveSchedule, deleteSchedule, setSel
     schedule_name: schedule_name || '',
     start_time: start_time || '06:00',
     end_time: end_time || '06:00',
-    interval: interval || 1,
+    interval: interval || 0,
     iterations: iterations || 1,
     duration_per_zone: duration_per_zone || 5,
     zones: zones || [],
@@ -48,31 +74,13 @@ const ScheduleEditor = ({ selectedSchedule, saveSchedule, deleteSchedule, setSel
   const handleChange = (event) => {
     let { name, value } = event.target;
 
-    if (name.includes('day_')) {
-      toggleDay(name);
-    } 
-    else if (name.includes('zone_')) {
-      toggleZone(name);
-    } else {
-      dispatch({name, value});
+    if (name != 'schedule_name') {
+      value = parseInt(value);
+      setEndTime({ [name]: value });
     }
-    setEndTime({ [name]: value });
+
+    dispatch({name, value});
   }
-
-  // const createZones = () => {
-  //   let zones = [];
-
-  //   for (let i = 0; i < 6; i++) {
-  //     zones.push(
-  //         <label htmlFor={`zone_${i + 1}`} key={i}>
-  //           <input type="checkbox" name={`zone_${i + 1}`} checked={schedule.zones.includes(i)} onChange={handleChange} />
-  //           <div>{ `${i + 1}` }</div>
-  //         </label>
-  //       )
-  //   }
-  //   return zones;
-  // }
-
 
   const updateSchedule = (event) => {
     event.preventDefault();
@@ -94,38 +102,37 @@ const ScheduleEditor = ({ selectedSchedule, saveSchedule, deleteSchedule, setSel
     schedule.end_time = calculateEndTime({ ...schedule, ...change });
   }
 
-  const toggleDay = (day) => {
+  const toggleDay = (dayToToggle) => {
     let days = schedule.days;
-    let dayIndex = parseInt(day.slice(4));
 
-    days[dayIndex] = !days[dayIndex];
-
+    days[dayToToggle] = !days[dayToToggle];
     dispatch({name: 'days', value: days});
   }
 
-  const toggleZone = (zone) => {
+  const toggleZone = (zoneToToggle) => {
     let zones = schedule.zones;
-    let zoneIndex = parseInt(zone.slice(5)) - 1;
 
-    if (zones.includes(zoneIndex)) {
-      zones = zones.filter(zone => zone !== zoneIndex);
+    if (zones.includes(zoneToToggle)) {
+      zones = zones.filter(zone => zone !== zoneToToggle);
     } else {
-      zones.push(zoneIndex)
+      zones.push(zoneToToggle)
     }
-
     dispatch({name: 'zones', value: zones});
+    setEndTime({ zones });
   }
 
   const validateTime = (endtime) => {
     return (schedule.end_time && !schedule.end_time.includes('NaN'));
   }
 
+  const classes = useStyles();
+
   return (
     <main className="schedule-editor">
       <section className="top">
         <DaysOfTheWeek 
-          selectedSchedule={selectedSchedule}
-          updateSchedule={updateSchedule} 
+          days={schedule.days}
+          toggleDay={toggleDay} 
         />
         <div className="button-container">
           <Link to="/">
@@ -141,7 +148,7 @@ const ScheduleEditor = ({ selectedSchedule, saveSchedule, deleteSchedule, setSel
         </div>
       </section>
       <section className="schedule-container">
-        <form className="schedule-form-main">
+        <form className={`schedule-form-main ${classes.editor}`}>
           <TextField 
             id="program-name-input"
             name="schedule_name"
@@ -150,62 +157,73 @@ const ScheduleEditor = ({ selectedSchedule, saveSchedule, deleteSchedule, setSel
             value={schedule.schedule_name || '' } 
             onChange={handleChange}
           />
-          <TextField
-            id="start-time-input"
-            name="start_time"
-            label="start time"
-            type="time"
-            value={schedule.start_time}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            inputProps={{
-              step: 300, // 5 min
-            }}
-            onChange={handleChange}
-          />
-          <Typography>
-              end time: { schedule.end_time }
-          </Typography>
-          <TextField
-            label="iterations"
-            id="iterations-input"
-            name="iterations" 
-            type="number" 
-            min="0" 
-            max="60" 
-            value={schedule.iterations} 
-            onChange={handleChange}
-          />
-          <TextField
-            label="interval"
-            id="interval-input"
-            name="interval" 
-            type="number" 
-            min="0" 
-            max="60" 
-            value={schedule.interval} 
-            onChange={handleChange}
-          />
-          <TextField
-            label="duration per zone"
-            id="duration-input"
-            name="duration_per_zone" 
-            type="number" 
-            min="1" 
-            max="30" 
-            value={schedule.duration_per_zone} 
-            onChange={handleChange}
-          />
-          {/*<div className="schedule-form-days-of-week">
-            {createDays()}
-          </div>*/}
-          {/*<div className="flex space-evenly">
-          { createZones() }
-          </div>*/}
+          <Zones zones={schedule.zones} toggleZone={toggleZone}/>
+          <div className="flex-full">
+            <TextField
+              id="start-time-input"
+              className="w-full"
+              name="start_time"
+              label="start time"
+              type="time"
+              value={schedule.start_time}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              inputProps={{
+                step: 300, // 5 min
+              }}
+              onChange={handleChange}
+            />
+            <TextField
+              id="end-time-field"
+              className="w-full"
+              name="end_time"
+              label="end time"
+              type="time"
+              value={schedule.end_time}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </div>
+          <div className="flex-full">
+            <TextField
+              label="iterations"
+              id="iterations-input"
+              className="w-full"
+              name="iterations" 
+              type="number"
+              InputProps={{inputProps: { min: 1, max: 6 } }}
+              value={schedule.iterations} 
+              onChange={handleChange}
+            />
+            <TextField
+              label="interval"
+              id="interval-input"
+              className="w-full"
+              name="interval" 
+              type="number" 
+              InputProps={{inputProps: { min: 0, max: (60 * 5) } }}
+              value={schedule.interval} 
+              onChange={handleChange}
+            />
+            <TextField
+              label="dur. per zone"
+              id="duration-input"
+              className="w-full"
+              name="duration_per_zone" 
+              type="number" 
+              InputProps={{inputProps: { min: 1, max: 60 } }}
+              value={schedule.duration_per_zone} 
+              onChange={handleChange}
+            />
+          </div>
           <div className="flex space-evenly">
             <Button variant="contained" color="primary" onClick={updateSchedule}>Save Schedule</Button>
-            <Button variant="contained" color="theme.pallete.button.warning" onClick={removeSchedule}>Delete</Button>
+            <Button variant="contained" color="secondary" onClick={removeSchedule}>Delete</Button>
           </div>
         </form>
       </section>

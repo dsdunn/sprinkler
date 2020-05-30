@@ -30,8 +30,8 @@ const sprinklerTheme = createMuiTheme({
     text: {
       primary: '#BCAB79',
     },
-    button: {
-      warning: 'red'
+    warning: {
+      main: '#BCAB79',
     }
   },
 });
@@ -57,7 +57,7 @@ const useStyles = makeStyles({
       overflow: 'scroll',
     },
     '& .schedule-container': {
-      paddingTop: '20vh'
+      padding: '20vh 12px',
     },
     '& .top': {
       position: 'fixed',
@@ -76,8 +76,7 @@ const useStyles = makeStyles({
     '& .control-button': {
       width: '90px',
       margin: '1em 0',
-      // padding: '0.5em 2em'
-    }
+    },
   },
 });
 
