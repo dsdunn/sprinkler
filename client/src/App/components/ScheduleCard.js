@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Card, CardContent, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -23,7 +23,7 @@ export const ScheduleCard = ({ schedule, editSchedule, runSchedule }) => {
           <div>id: { schedule.id }</div>
         </div>
         <div onClick={ handleEditSchedule }>Edit</div>
-        <div onClick={() => { runSchedule(schedule.id) }}>Run this now</div>
+        <div onClick={() => runSchedule(schedule.id) }>Run this now</div>
     </Card>
   );
 }

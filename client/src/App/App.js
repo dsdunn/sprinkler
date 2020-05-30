@@ -1,84 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Switch, Redirect, withRouter, Link } from 'react-router-dom';
+import { Route, Switch, withRouter} from 'react-router-dom';
 import './App.css';
 
-import { CssBaseline, Container } from '@material-ui/core';
+import { ThemeProvider } from '@material-ui/styles';
 
-import ScheduleArchive from './components/ScheduleArchive';
-import ScheduleEditor from './components/ScheduleEditor';
-import Dashboard from './components/Dashboard';
+import { sprinklerTheme, useStyles } from './AppStyles';
 
 import * as api from './api';
 
-import { Button, ButtonGroup, Typography } from '@material-ui/core';
-import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
-import { ThemeProvider } from '@material-ui/styles';
+import ScheduleArchive from './components/ScheduleArchive';
+import ScheduleSingle from './components/ScheduleSingle';
 
-const sprinklerTheme = createMuiTheme({
-  palette: {
-    type: 'dark',
-
-    primary: {
-      main: '#2978A0',
-    },
-    secondary: {
-      main: '#315659',
-    },
-    info: {
-      main: '#B4534D',
-    },
-    text: {
-      primary: '#BCAB79',
-    },
-    warning: {
-      main: '#BCAB79',
-    }
-  },
-});
-
-const useStyles = makeStyles({
-  root: {
-    boxSizing: 'border-box',
-    minHeight: '110vh',
-    backgroundColor: '#253031',
-    color: '#BCAB79',
-
-    '& .days-of-the-week': {
-      display: 'flex',
-      height: '10vh',
-      width: '100vw',
-
-      '& .header-day': {
-        flexGrow: 1,
-        height: '100%',
-      }
-    },
-    '& .schedule-archive': {
-      overflow: 'scroll',
-    },
-    '& .schedule-container': {
-      padding: '20vh 12px',
-    },
-    '& .top': {
-      position: 'fixed',
-      zIndex: '20',
-      backgroundColor: '#253031'
-    },
-    '& a': {
-      textDecoration: 'none'
-    },
-    '& .button-container': {
-      width: '100%',
-      display: 'flex',
-      justifyContent: 'space-evenly',
-      alignItems: 'center',
-    },
-    '& .control-button': {
-      width: '90px',
-      margin: '1em 0',
-    },
-  },
-});
 
 const ws = new WebSocket('ws://localhost:8080');
 
@@ -126,7 +58,7 @@ const App = (props) => {
       setCurrentlyOnZone(zone);
     }
 
-    if (currentId != id) {
+    if (currentId !== id) {
       setCurrentRunningSchedule(schedule);
     }
   }
@@ -163,7 +95,6 @@ const App = (props) => {
       return;
     }
     let response = await api.deleteSchedule(id);
-
     let newList = schedules.filter(schedule => {
         return schedule.id !== id;
       });
@@ -177,9 +108,14 @@ const App = (props) => {
   }
 
   const runSchedule = async (id) => {
-    let response = await api.putRunSchedule(id);
-    // let result = await response.json();
-    console.log(response);
+    let result = await api.putRunSchedule(id);
+    let { schedule } = result;
+    
+    schedule && setCurrentRunningSchedule(schedule);
+    schedule && setSelectedSchedule(schedule);
+    schedule.zones && schedule.zones.length && setCurrentlyOnZone(schedule.zones[0])
+
+    props.history.push('/program')
   }
 
   const getCurrentRunningSchedule = () => {
@@ -207,7 +143,7 @@ const App = (props) => {
           <Route 
             exact path='/program' 
             render={(props) => (
-              <ScheduleEditor 
+              <ScheduleSingle 
                 {...props} 
                 selectedSchedule={selectedSchedule} 
                 saveSchedule={saveSchedule} 

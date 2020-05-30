@@ -34,7 +34,9 @@ export const putSchedule = async (schedule) => {
 
 export const putRunSchedule = async (id) => {
   let response = await apiFetch(`/run_schedule/${id}`, 'PUT');
-  return response;
+  let results = await response.json();
+
+  return results;
 }
 
 export const deleteSchedule = async (id) => {

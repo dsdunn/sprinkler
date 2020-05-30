@@ -37,7 +37,7 @@ const getSingleScheduleToRunNow = (id) => {
     .then(result => {
       let schedule = result[0];
       schedule = updateTimes(schedule);
-      return schedule;
+      return new Promise( (resolve, reject) => resolve(schedule));
     });
 }
 
@@ -98,6 +98,7 @@ const putSchedule = (request, response) => {
 
 const deleteSchedule = (request, response) => {
   let id = request.body.id;
+  console.log('delete: ', id)
 
   knex('schedules').delete({id: id}, '*')
     .then(result => {

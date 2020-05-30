@@ -1,7 +1,7 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Button, TextField, Typography } from '@material-ui/core';
+import { Button, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { DaysOfTheWeek } from './DaysOfTheWeek';
@@ -34,19 +34,38 @@ const useStyles = makeStyles({
   }
 })
 
-const ScheduleEditor = ({ selectedSchedule, saveSchedule, deleteSchedule, setSelectedSchedule, ...props }) => {
-  let { id, schedule_name, start_time, end_time, interval, iterations, duration_per_zone, zones, days } = selectedSchedule;
+const ScheduleSingle = ({ 
+  currentlyOnZone, 
+  currentRunningSchedule, 
+  selectedSchedule, 
+  saveSchedule, 
+  deleteSchedule, 
+  setSelectedSchedule,
+   ...props 
+ }) => {
+
+  let { 
+    id, 
+    schedule_name, 
+    start_time, 
+    end_time, 
+    interval, 
+    iterations, 
+    duration_per_zone, 
+    zones, 
+    days 
+  } = selectedSchedule;
 
   let scheduleToEdit = {
     id: id || null,
     schedule_name: schedule_name || '',
     start_time: start_time || '06:00',
-    end_time: end_time || '06:00',
+    end_time: end_time || '06:30',
     interval: interval || 0,
     iterations: iterations || 1,
     duration_per_zone: duration_per_zone || 5,
-    zones: zones || [],
-    days: days || []
+    zones: zones || [0,1,2,3,4,5],
+    days: days || [0,1,2,3,4,5,6]
   }
 
   const reducer = (state, { name, value }) => {
@@ -74,7 +93,7 @@ const ScheduleEditor = ({ selectedSchedule, saveSchedule, deleteSchedule, setSel
   const handleChange = (event) => {
     let { name, value } = event.target;
 
-    if (name != 'schedule_name') {
+    if (name !== 'schedule_name') {
       value = parseInt(value);
       setEndTime({ [name]: value });
     }
@@ -143,8 +162,8 @@ const ScheduleEditor = ({ selectedSchedule, saveSchedule, deleteSchedule, setSel
               onClick={() => setSelectedSchedule({})}>
             Back</Button>
           </Link>
-          <Button variant="contained" color="secondary" className="stop-button  control-button" color="secondary">Stop</Button>
-          <Button variant="contained" color="secondary" className="run-button  control-button" color="secondary">Run</Button>
+          <Button variant="contained" color="secondary" className="stop-button  control-button">Stop</Button>
+          <Button variant="contained" color="secondary" className="run-button  control-button">Run</Button>
         </div>
       </section>
       <section className="schedule-container">
@@ -230,4 +249,4 @@ const ScheduleEditor = ({ selectedSchedule, saveSchedule, deleteSchedule, setSel
     </main>
   );
 }
-export default ScheduleEditor;
+export default ScheduleSingle;

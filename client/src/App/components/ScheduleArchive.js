@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Box, Container, Button } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 
 import { ScheduleCard } from './ScheduleCard';
 import { DaysOfTheWeek } from './DaysOfTheWeek';

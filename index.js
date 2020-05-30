@@ -49,7 +49,12 @@ app.put('/api/v1/run_schedule/:id', async (req, res) => {
   let nowSchedule = await db.getSingleScheduleToRunNow(id);
 
   clock.runProgram(nowSchedule);
-});
+
+  res.status(200).json({
+    text: 'successfully started program' + nowSchedule.schedule_name,
+    schedule: nowSchedule
+    });
+  });
 
 // stopCurrentProgram
 
