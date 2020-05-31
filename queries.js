@@ -11,13 +11,6 @@ const knex = require('knex')({
   }
 });
 
-const daysBoolToInt = (bools) => {
-  return bools.reduce((newDays, bool, i) => {
-    if (bool) { newDays.push(i)}
-    return newDays;
-  }, [])
-}
-
 const pollSchedules = (day, minute) => {
   try{
     return knex('schedules').whereRaw('days @> ARRAY[?]::integer[]',[day])
@@ -37,6 +30,7 @@ const getSingleScheduleToRunNow = (id) => {
     .then(result => {
       let schedule = result[0];
       schedule = updateTimes(schedule);
+      schedule.id = 0;
       return new Promise( (resolve, reject) => resolve(schedule));
     });
 }
@@ -69,7 +63,6 @@ const formatTime = (rawDate) => {
 
 const createSchedule = (request, response) => {
   let { schedule_name, start_time, end_time, interval, iterations, duration_per_zone, zones, days } = request.body;
-  days = daysBoolToInt(days);
 
   knex('schedules').insert({schedule_name, start_time, end_time, interval, iterations, duration_per_zone, zones, days}, '*')
     .then(result => {
@@ -82,8 +75,6 @@ const createSchedule = (request, response) => {
 
 const putSchedule = (request, response) => {
   let { id, schedule_name, start_time, end_time, interval, iterations, duration_per_zone, zones, days } = request.body;
-
-  days = daysBoolToInt(days);
 
   knex('schedules')
     .update({schedule_name, start_time, end_time, interval, iterations, duration_per_zone, zones, days}, '*')

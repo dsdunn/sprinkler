@@ -41,8 +41,35 @@ const ScheduleSingle = ({
   saveSchedule, 
   deleteSchedule, 
   setSelectedSchedule,
+  runSchedule,
    ...props 
  }) => {
+
+  let isCurrentRunningSchedule = currentRunningSchedule && selectedSchedule && currentRunningSchedule.id === selectedSchedule.id;
+
+  // const initDays = (schedule) => {
+  //   let days = schedule.days || [];
+
+  //   let newDays = new Array(7);
+
+  //   for (let i = 0; i < 7; i++) {
+  //     newDays[i] = days.includes(i);
+  //   }
+  //   schedule.days = newDays;
+
+  //   return schedule;
+  // }
+
+  const reducer = (state, { name, value }) => {
+    if (name === "schedule") {
+      return value;
+    }
+
+    return ({
+      ...state,
+      [name]: value
+    })
+  };
 
   let { 
     id, 
@@ -54,7 +81,7 @@ const ScheduleSingle = ({
     duration_per_zone, 
     zones, 
     days 
-  } = selectedSchedule;
+  } = isCurrentRunningSchedule ? currentRunningSchedule : selectedSchedule;
 
   let scheduleToEdit = {
     id: id || null,
@@ -68,27 +95,14 @@ const ScheduleSingle = ({
     days: days || [0,1,2,3,4,5,6]
   }
 
-  const reducer = (state, { name, value }) => {
-    return ({
-      ...state,
-      [name]: value
-    })
-  };
+  const [ schedule, dispatch ] = useReducer(reducer, scheduleToEdit);
 
-  const initDays = (schedule) => {
-    let days = schedule.days || [];
-
-    let newDays = new Array(7);
-
-    for (let i = 0; i < 7; i++) {
-      newDays[i] = days.includes(i);
-    }
-    schedule.days = newDays;
-
-    return schedule;
+  const handleRunSchedule = async (event) => {
+    let newRunning = await runSchedule(schedule.id);
+    selectedSchedule = newRunning;
+    currentRunningSchedule = newRunning;
+    dispatch({name: 'schedule', value: newRunning });
   }
-
-  const [ schedule, dispatch ] = useReducer(reducer, scheduleToEdit, initDays);
 
   const handleChange = (event) => {
     let { name, value } = event.target;
@@ -99,6 +113,7 @@ const ScheduleSingle = ({
     }
 
     dispatch({name, value});
+    saveSchedule(schedule);
   }
 
   const updateSchedule = (event) => {
@@ -122,9 +137,8 @@ const ScheduleSingle = ({
   }
 
   const toggleDay = (dayToToggle) => {
-    let days = schedule.days;
+    let days = schedule.days.filter(day => day !== dayToToggle);
 
-    days[dayToToggle] = !days[dayToToggle];
     dispatch({name: 'days', value: days});
   }
 
@@ -151,7 +165,8 @@ const ScheduleSingle = ({
       <section className="top">
         <DaysOfTheWeek 
           days={schedule.days}
-          toggleDay={toggleDay} 
+          toggleDay={toggleDay}
+          isReadOnly={isCurrentRunningSchedule}
         />
         <div className="button-container">
           <Link to="/">
@@ -163,7 +178,16 @@ const ScheduleSingle = ({
             Back</Button>
           </Link>
           <Button variant="contained" color="secondary" className="stop-button  control-button">Stop</Button>
-          <Button variant="contained" color="secondary" className="run-button  control-button">Run</Button>
+          {
+            !isCurrentRunningSchedule && 
+              <Button 
+                variant="contained" 
+                color="secondary" 
+                className="run-button control-button"
+                onClick={handleRunSchedule}
+              >
+              Run </Button>
+          }
         </div>
       </section>
       <section className="schedule-container">
@@ -174,9 +198,12 @@ const ScheduleSingle = ({
             variant="outlined" 
             placeholder="program name" 
             value={schedule.schedule_name || '' } 
+            InputProps={{
+              readOnly: isCurrentRunningSchedule,
+            }}
             onChange={handleChange}
           />
-          <Zones zones={schedule.zones} toggleZone={toggleZone}/>
+          <Zones zones={schedule.zones} toggleZone={toggleZone} isReadOnly={isCurrentRunningSchedule}/>
           <div className="flex-full">
             <TextField
               id="start-time-input"
@@ -190,6 +217,7 @@ const ScheduleSingle = ({
               }}
               inputProps={{
                 step: 300, // 5 min
+                readOnly: isCurrentRunningSchedule
               }}
               onChange={handleChange}
             />
@@ -215,7 +243,10 @@ const ScheduleSingle = ({
               className="w-full"
               name="iterations" 
               type="number"
-              InputProps={{inputProps: { min: 1, max: 6 } }}
+              InputProps={{
+                inputProps: { min: 1, max: 6 },
+                readOnly: isCurrentRunningSchedule 
+              }}
               value={schedule.iterations} 
               onChange={handleChange}
             />
@@ -225,7 +256,10 @@ const ScheduleSingle = ({
               className="w-full"
               name="interval" 
               type="number" 
-              InputProps={{inputProps: { min: 0, max: (60 * 5) } }}
+              InputProps={{
+                inputProps: { min: 0, max: (60 * 5) },
+                readOnly: isCurrentRunningSchedule
+              }}
               value={schedule.interval} 
               onChange={handleChange}
             />
@@ -235,15 +269,21 @@ const ScheduleSingle = ({
               className="w-full"
               name="duration_per_zone" 
               type="number" 
-              InputProps={{inputProps: { min: 1, max: 60 } }}
+              InputProps={{
+                inputProps: { min: 1, max: 60 },
+                readOnly: isCurrentRunningSchedule
+              }}
               value={schedule.duration_per_zone} 
               onChange={handleChange}
             />
           </div>
-          <div className="flex space-evenly">
-            <Button variant="contained" color="primary" onClick={updateSchedule}>Save Schedule</Button>
-            <Button variant="contained" color="secondary" onClick={removeSchedule}>Delete</Button>
-          </div>
+          { 
+            !isCurrentRunningSchedule &&
+              <div className="flex space-evenly">
+                <Button variant="contained" color="primary" onClick={updateSchedule}>Save Schedule</Button>
+                <Button variant="contained" color="secondary" onClick={removeSchedule}>Delete</Button>
+              </div>
+          }
         </form>
       </section>
     </main>

@@ -39,7 +39,6 @@ const App = (props) => {
 
   const initSocket = () => {
     ws.onopen = () => {
-      console.log('sockets bitch!')
       ws.send('socket party')
     }
   }
@@ -50,6 +49,7 @@ const App = (props) => {
     data = JSON.parse(data);
     
     let { zone, schedule } = data;
+    console.log(zone, schedule);
     let id = schedule && schedule.id;
     let currentSchedule = getCurrentRunningSchedule();
     let currentId = currentSchedule && currentSchedule.id;
@@ -107,15 +107,19 @@ const App = (props) => {
     props.history.push('/program')
   }
 
-  const runSchedule = async (id) => {
+  const runScheduleNow = async (id) => {
     let result = await api.putRunSchedule(id);
     let { schedule } = result;
-    
-    schedule && setCurrentRunningSchedule(schedule);
-    schedule && setSelectedSchedule(schedule);
-    schedule.zones && schedule.zones.length && setCurrentlyOnZone(schedule.zones[0])
 
-    props.history.push('/program')
+    if (schedule) {
+      schedule.id = 0;
+      setCurrentRunningSchedule(schedule);
+      setSelectedSchedule(schedule);
+      schedule.zones && schedule.zones.length && setCurrentlyOnZone(schedule.zones[0])
+      
+      return schedule;
+    }
+
   }
 
   const getCurrentRunningSchedule = () => {
@@ -135,8 +139,9 @@ const App = (props) => {
                 {...props} 
                 schedules={schedules}
                 editSchedule={editSchedule}
-                runSchedule={runSchedule}
+                runSchedule={runScheduleNow}
                 setSelectedSchedule={setSelectedSchedule}
+                currentRunningSchedule={currentRunningSchedule}
               />
             )}
           />
@@ -152,6 +157,7 @@ const App = (props) => {
                 currentlyOnZone={currentlyOnZone}
                 editSchedule={editSchedule}
                 setSelectedSchedule={setSelectedSchedule}
+                runSchedule={runScheduleNow}
               />
             )}
           />

@@ -7,7 +7,7 @@ import { ScheduleCard } from './ScheduleCard';
 import { DaysOfTheWeek } from './DaysOfTheWeek';
 
 
-const ScheduleArchive = ({ schedules = [], currentRunningSchedule = {}, setSelectedSchedule, editSchedule, runSchedule }) => {
+const ScheduleArchive = ({ schedules = [], currentRunningSchedule, setSelectedSchedule, editSchedule, runSchedule, ...props }) => {
 
   let [ filter, setFilter ] = useState([]);
 
@@ -23,6 +23,11 @@ const ScheduleArchive = ({ schedules = [], currentRunningSchedule = {}, setSelec
     setFilter(days)
   }
 
+  const goToRunning = () => {
+    setSelectedSchedule(currentRunningSchedule);
+    props.history.push('/program');
+  }
+
   return (
     <main className="schedule-archive">
       <section className="top">
@@ -31,8 +36,12 @@ const ScheduleArchive = ({ schedules = [], currentRunningSchedule = {}, setSelec
           <Link to="/program">
             <Button variant="contained" className="new-program-button control-button" color="primary">New</Button>
           </Link>
-          <Button variant="contained" color="secondary" className="stop-button  control-button">Stop</Button>
-          <Button variant="contained" color="secondary" className="running-button  control-button">Running</Button>
+          <Button variant="contained" color="secondary" className="stop-button control-button">Stop</Button>
+          { 
+            currentRunningSchedule &&
+              <Button variant="contained" color="secondary" className="running-button control-button" onClick={goToRunning}>Running</Button>
+          }
+
         </div>
       </section>
       <section className="schedule-container">
