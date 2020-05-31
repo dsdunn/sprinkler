@@ -7,7 +7,7 @@ import { ScheduleCard } from './ScheduleCard';
 import { DaysOfTheWeek } from './DaysOfTheWeek';
 
 
-const ScheduleArchive = ({ schedules = [], currentRunningSchedule, setSelectedSchedule, editSchedule, runSchedule, ...props }) => {
+const ScheduleArchive = ({ schedules = [], currentRunningSchedule, setSelectedSchedule, editSchedule, runSchedule, stopRunning, ...props }) => {
 
   let [ filter, setFilter ] = useState([]);
 
@@ -36,12 +36,18 @@ const ScheduleArchive = ({ schedules = [], currentRunningSchedule, setSelectedSc
           <Link to="/program">
             <Button variant="contained" className="new-program-button control-button" color="primary">New</Button>
           </Link>
-          <Button variant="contained" color="secondary" className="stop-button control-button">Stop</Button>
           { 
-            currentRunningSchedule &&
-              <Button variant="contained" color="secondary" className="running-button control-button" onClick={goToRunning}>Running</Button>
+            currentRunningSchedule && 
+              <Button variant="contained" color="secondary" className="stop-button control-button" onClick={ stopRunning }>
+                Stop
+              </Button> 
           }
-
+          { 
+            currentRunningSchedule && 
+              <Button variant="contained" color="secondary" className="running-button control-button" onClick={goToRunning}>
+                Running
+              </Button> 
+          }
         </div>
       </section>
       <section className="schedule-container">

@@ -1,6 +1,6 @@
 const apiFetch = (path, method = 'GET', payload = null) => {
-  console.log(payload);
-  let body = payload ? JSON.stringify(payload) : null
+  let body = payload ? JSON.stringify(payload) : null;
+
   return fetch(`/api/v1${path}`, {
     method,
     headers: {
@@ -40,14 +40,15 @@ export const putRunSchedule = async (schedule) => {
   return results;
 }
 
+export const stopCurrentRunningSchedule = async () => {
+  let response = await apiFetch('/stop', 'PUT');
+// not json
+  return response;
+}
+
 export const deleteSchedule = async (id) => {
   let response = await apiFetch('/schedules', 'DELETE', {id})
   let results = await response.json();
 
   return results;
 }
-
-// export default {
-//   getSchedules,
-//   createSchedule,
-// }

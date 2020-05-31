@@ -58,6 +58,7 @@ class ValveControl {
     this.zones.forEach(zone => {
       zone.writeSync(1);
     })
+    this.currentlyOnZoneNumber = null;
   }
 
   getCurrentlyOnZone() {

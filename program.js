@@ -51,22 +51,28 @@ class Program {
     this.running = true;
     this.loop();
   }
+
   killSeries() {
     clearInterval(this.series);
     this.valveControl.allZonesOff();
   }
+
   pauseProgram() {
     this.paused = true;
   }
+
   unpauseProgram() {
     this.paused = false;
   }
+
   stopProgram() {
     this.killSeries();
     this.valveControl.allZonesOff();
     this.running = false;
     this.stopProgramCallback();
+    console.log('program: stop program')
   }
+  
   maybeWait() {
     console.log('current iteration: ', this.current_iteration)
     console.log('iterations: ', this.iterations)

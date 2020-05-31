@@ -94,7 +94,7 @@ const App = (props) => {
     if (!id) {
       return;
     }
-    let response = await api.deleteSchedule(id);
+    await api.deleteSchedule(id);
     let newList = schedules.filter(schedule => {
         return schedule.id !== id;
       });
@@ -127,6 +127,15 @@ const App = (props) => {
     return currentRunningSchedule;
   }
 
+  const stopCurrentRunningSchedule = async () => {
+    let response = await api.stopCurrentRunningSchedule();
+    
+    if (response.status === 200) {
+      setCurrentRunningSchedule(null);
+      setCurrentlyOnZone(null);
+    }
+  }
+
   const classes = useStyles();
 
   return (
@@ -141,6 +150,7 @@ const App = (props) => {
                 schedules={schedules}
                 editSchedule={editSchedule}
                 runSchedule={runScheduleNow}
+                stopRunning={stopCurrentRunningSchedule}
                 setSelectedSchedule={setSelectedSchedule}
                 currentRunningSchedule={currentRunningSchedule}
               />
@@ -159,6 +169,7 @@ const App = (props) => {
                 editSchedule={editSchedule}
                 setSelectedSchedule={setSelectedSchedule}
                 runSchedule={runScheduleNow}
+                stopRunning={stopCurrentRunningSchedule}
               />
             )}
           />

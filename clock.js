@@ -70,7 +70,8 @@ class Clock {
   }
 
   stopProgram() {
-    this.program.stopProgram()
+    this.program && this.program.stopProgram();
+    this.valveControl.allZonesOff();
     this.current_schedule = null;
   }
 }

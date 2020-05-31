@@ -42,6 +42,7 @@ const ScheduleSingle = ({
   deleteSchedule, 
   setSelectedSchedule,
   runSchedule,
+  stopRunning,
    ...props 
  }) => {
 
@@ -172,7 +173,10 @@ const ScheduleSingle = ({
               onClick={() => setSelectedSchedule({})}>
             Back</Button>
           </Link>
-          <Button variant="contained" color="secondary" className="stop-button  control-button">Stop</Button>
+          {
+            currentRunningSchedule &&
+              <Button variant="contained" color="secondary" className="stop-button control-button" onClick={ stopRunning }>Stop</Button>
+          }
           {
             !isCurrent() && 
               <Button 
@@ -269,7 +273,7 @@ const ScheduleSingle = ({
               onChange={handleChange}
             />
             <TextField
-              label="dur. per zone"
+              label="min/zone"
               id="duration-input"
               className="w-full"
               name="duration_per_zone" 

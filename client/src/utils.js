@@ -34,7 +34,6 @@ function minutesToTimeString(totalMinutes) {
   if (hours < 10) {
     hours = '0' + hours;
   } 
-  console.log(hours.toString() + ':' + minutes.toString())
 
   return hours.toString() + ':' + minutes.toString();
 }

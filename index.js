@@ -55,10 +55,24 @@ app.put('/api/v1/run_schedule', async (req, res) => {
   res.status(200).json({
     text: 'successfully started program' + nowSchedule.schedule_name,
     schedule: nowSchedule
-    });
   });
+});
 
-// stopCurrentProgram
+app.put('/api/v1/stop', (req, res) => {
+  let program = clock.getCurrentSchedule();
+
+  if (! program ) {
+    res.status(400).send('no program running');
+    return;
+  }
+
+  clock.stopProgram();
+
+  res.status(200).json({ 
+    text: 'successfully stopped ' + program.schedule_name,
+    schedule: program
+  });
+})
 
 app.get('*', (req, res) => {
   console.log(__dirname);
