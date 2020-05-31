@@ -1,3 +1,13 @@
+function updateTimes(schedule) {
+  let { duration_per_zone, zones, iterations, interval } = schedule;
+  let startTime = formatTime(new Date());
+
+  schedule.start_time = startTime;
+  schedule.end_time = calculateEndTime(schedule);
+
+  return schedule;
+}
+
 function calculateEndTime({ start_time, interval, iterations, zones, duration_per_zone }) {
   let session = zones.length * duration_per_zone;
   let totalTime = session * iterations + (iterations - 1) * interval;
@@ -29,6 +39,10 @@ function secondsToTimeString(totalSeconds) {
   let minutes = (minutesAndSeconds - seconds) / 60;
   let hours = (totalSeconds - minutesAndSeconds) / (60 * 60);
   
+  if (seconds < 10) {
+    seconds = '0' + seconds;
+  }
+
   if (minutes < 10) {
     minutes = '0' + minutes;
   }
@@ -40,6 +54,18 @@ function secondsToTimeString(totalSeconds) {
   return hours.toString() + ':' + minutes.toString() + ':' + seconds.toString();
 }
 
+const formatTime = (rawDate) => {
+  let h = rawDate.getHours();
+  let m = rawDate.getMinutes();
+  let s = rawDate.getSeconds();
+    
+  h = (h < 10) ? "0" + h : h;
+  m = (m < 10) ? "0" + m : m;
+  s = (s < 10) ? "0" + s : s;
+  
+  return `${h}:${m}:${s}`;
+}
+
 module.exports = {
-  calculateEndTime
+  updateTimes
 }

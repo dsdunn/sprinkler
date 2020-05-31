@@ -1,4 +1,5 @@
 const apiFetch = (path, method = 'GET', payload = null) => {
+  console.log(payload);
   let body = payload ? JSON.stringify(payload) : null
   return fetch(`/api/v1${path}`, {
     method,
@@ -32,8 +33,8 @@ export const putSchedule = async (schedule) => {
   return results;
 }
 
-export const putRunSchedule = async (id) => {
-  let response = await apiFetch(`/run_schedule/${id}`, 'PUT');
+export const putRunSchedule = async (schedule) => {
+  let response = await apiFetch(`/run_schedule`, 'PUT', schedule);
   let results = await response.json();
 
   return results;
@@ -42,7 +43,6 @@ export const putRunSchedule = async (id) => {
 export const deleteSchedule = async (id) => {
   let response = await apiFetch('/schedules', 'DELETE', {id})
   let results = await response.json();
-  // console.log(results)
 
   return results;
 }

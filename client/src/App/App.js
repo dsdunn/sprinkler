@@ -107,17 +107,18 @@ const App = (props) => {
     props.history.push('/program')
   }
 
-  const runScheduleNow = async (id) => {
-    let result = await api.putRunSchedule(id);
-    let { schedule } = result;
+  const runScheduleNow = async (schedule) => {
+    let nowSchedule = { ...schedule, id: 0 };
 
-    if (schedule) {
-      schedule.id = 0;
-      setCurrentRunningSchedule(schedule);
-      setSelectedSchedule(schedule);
-      schedule.zones && schedule.zones.length && setCurrentlyOnZone(schedule.zones[0])
+    let response = await api.putRunSchedule(nowSchedule);
+    let scheduleToRun = response.schedule;
+
+    if (scheduleToRun) {
+      setCurrentRunningSchedule(scheduleToRun);
+      setSelectedSchedule(scheduleToRun);
+      scheduleToRun.zones && scheduleToRun.zones.length && setCurrentlyOnZone(scheduleToRun.zones[0])
       
-      return schedule;
+      return scheduleToRun;
     }
 
   }

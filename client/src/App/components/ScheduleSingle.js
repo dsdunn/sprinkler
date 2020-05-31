@@ -45,20 +45,9 @@ const ScheduleSingle = ({
    ...props 
  }) => {
 
-  let isCurrentRunningSchedule = currentRunningSchedule && selectedSchedule && currentRunningSchedule.id === selectedSchedule.id;
-
-  // const initDays = (schedule) => {
-  //   let days = schedule.days || [];
-
-  //   let newDays = new Array(7);
-
-  //   for (let i = 0; i < 7; i++) {
-  //     newDays[i] = days.includes(i);
-  //   }
-  //   schedule.days = newDays;
-
-  //   return schedule;
-  // }
+  let isCurrent = () => {
+    return currentRunningSchedule && selectedSchedule && currentRunningSchedule.id === selectedSchedule.id;
+  }
 
   const reducer = (state, { name, value }) => {
     if (name === "schedule") {
@@ -71,6 +60,7 @@ const ScheduleSingle = ({
     })
   };
 
+
   let { 
     id, 
     schedule_name, 
@@ -81,7 +71,7 @@ const ScheduleSingle = ({
     duration_per_zone, 
     zones, 
     days 
-  } = isCurrentRunningSchedule ? currentRunningSchedule : selectedSchedule;
+  } = isCurrent() ? currentRunningSchedule : selectedSchedule;
 
   let scheduleToEdit = {
     id: id || null,
@@ -98,9 +88,8 @@ const ScheduleSingle = ({
   const [ schedule, dispatch ] = useReducer(reducer, scheduleToEdit);
 
   const handleRunSchedule = async (event) => {
-    let newRunning = await runSchedule(schedule.id);
-    selectedSchedule = newRunning;
-    currentRunningSchedule = newRunning;
+    let newRunning = await runSchedule(schedule);
+
     dispatch({name: 'schedule', value: newRunning });
   }
 
@@ -137,7 +126,13 @@ const ScheduleSingle = ({
   }
 
   const toggleDay = (dayToToggle) => {
-    let days = schedule.days.filter(day => day !== dayToToggle);
+    let days = schedule.days;
+
+    if (days.includes(dayToToggle)) {
+      days = days.filter(day => day !== dayToToggle);
+    } else {
+      days.push(dayToToggle)
+    }
 
     dispatch({name: 'days', value: days});
   }
@@ -166,7 +161,7 @@ const ScheduleSingle = ({
         <DaysOfTheWeek 
           days={schedule.days}
           toggleDay={toggleDay}
-          isReadOnly={isCurrentRunningSchedule}
+          isReadOnly={isCurrent()}
         />
         <div className="button-container">
           <Link to="/">
@@ -179,7 +174,7 @@ const ScheduleSingle = ({
           </Link>
           <Button variant="contained" color="secondary" className="stop-button  control-button">Stop</Button>
           {
-            !isCurrentRunningSchedule && 
+            !isCurrent() && 
               <Button 
                 variant="contained" 
                 color="secondary" 
@@ -192,18 +187,28 @@ const ScheduleSingle = ({
       </section>
       <section className="schedule-container">
         <form className={`schedule-form-main ${classes.editor}`}>
-          <TextField 
-            id="program-name-input"
-            name="schedule_name"
-            variant="outlined" 
-            placeholder="program name" 
-            value={schedule.schedule_name || '' } 
-            InputProps={{
-              readOnly: isCurrentRunningSchedule,
-            }}
-            onChange={handleChange}
-          />
-          <Zones zones={schedule.zones} toggleZone={toggleZone} isReadOnly={isCurrentRunningSchedule}/>
+          {
+            isCurrent() && 
+              <div>
+                <div>Running: {currentRunningSchedule.schedule_name}</div>
+                <div>Current Running Zone: { currentlyOnZone + 1 } </div>
+              </div>
+          }
+          {
+            !isCurrent() &&
+              <TextField 
+                id="program-name-input"
+                name="schedule_name"
+                variant="outlined" 
+                placeholder="program name" 
+                value={schedule.schedule_name || '' } 
+                InputProps={{
+                  readOnly: isCurrent(),
+                }}
+                onChange={handleChange}
+              />
+          }
+          <Zones zones={schedule.zones} toggleZone={toggleZone} isReadOnly={isCurrent()}/>
           <div className="flex-full">
             <TextField
               id="start-time-input"
@@ -217,7 +222,7 @@ const ScheduleSingle = ({
               }}
               inputProps={{
                 step: 300, // 5 min
-                readOnly: isCurrentRunningSchedule
+                readOnly: isCurrent()
               }}
               onChange={handleChange}
             />
@@ -245,7 +250,7 @@ const ScheduleSingle = ({
               type="number"
               InputProps={{
                 inputProps: { min: 1, max: 6 },
-                readOnly: isCurrentRunningSchedule 
+                readOnly: isCurrent() 
               }}
               value={schedule.iterations} 
               onChange={handleChange}
@@ -258,7 +263,7 @@ const ScheduleSingle = ({
               type="number" 
               InputProps={{
                 inputProps: { min: 0, max: (60 * 5) },
-                readOnly: isCurrentRunningSchedule
+                readOnly: isCurrent()
               }}
               value={schedule.interval} 
               onChange={handleChange}
@@ -271,16 +276,15 @@ const ScheduleSingle = ({
               type="number" 
               InputProps={{
                 inputProps: { min: 1, max: 60 },
-                readOnly: isCurrentRunningSchedule
+                readOnly: isCurrent()
               }}
               value={schedule.duration_per_zone} 
               onChange={handleChange}
             />
           </div>
           { 
-            !isCurrentRunningSchedule &&
+            !isCurrent() &&
               <div className="flex space-evenly">
-                <Button variant="contained" color="primary" onClick={updateSchedule}>Save Schedule</Button>
                 <Button variant="contained" color="secondary" onClick={removeSchedule}>Delete</Button>
               </div>
           }

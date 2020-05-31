@@ -22,8 +22,6 @@ export const DaysOfTheWeek = ({ days = [], toggleDay, setFilter = null }) => {
       })
     }
 
-    console.log(days);
-
     return (
       <ButtonGroup className="days-of-the-week">
       { dayButtons() }

@@ -8,6 +8,7 @@ const app = express();
 const db = require('./queries');
 const { Clock } = require('./clock');
 const { ValveControl } = require('./valveControl');
+const { updateTimes } = require('./utils');
 
 const valveControl = new ValveControl;
 valveControl.init();
@@ -39,14 +40,15 @@ app.post('/api/v1/schedules', db.createSchedule);
 app.put('/api/v1/schedules', db.putSchedule);
 app.delete('/api/v1/schedules', db.deleteSchedule);
 
-app.put('/api/v1/run_schedule/:id', async (req, res) => {
-  let { id } = req.params;
+app.put('/api/v1/run_schedule', async (req, res) => {
+  console.log(req.body)
+  let schedule = req.body;
 
-  if (!id) {
+  if (!schedule) {
     res.status(400).send('invalid id');
     return;
   }
-  let nowSchedule = await db.getSingleScheduleToRunNow(id);
+  let nowSchedule = updateTimes(schedule);
 
   clock.runProgram(nowSchedule);
 

@@ -19,7 +19,7 @@ export const ScheduleCard = ({ schedule, editSchedule, runSchedule }) => {
           <div>id: { schedule.id }</div>
         </div>
         <div onClick={() => editSchedule(schedule) }>Edit</div>
-        <div onClick={() => runSchedule(schedule.id) }>Run this now</div>
+        <div onClick={() => runSchedule(schedule) }>Run this now</div>
     </Card>
   );
 }
