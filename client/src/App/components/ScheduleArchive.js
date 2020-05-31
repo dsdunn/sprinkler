@@ -9,18 +9,40 @@ import { DaysOfTheWeek } from './DaysOfTheWeek';
 
 const ScheduleArchive = ({ schedules = [], currentRunningSchedule, setSelectedSchedule, editSchedule, runSchedule, stopRunning, ...props }) => {
 
-  let [ filter, setFilter ] = useState([]);
+  let [ days, setDays ] = useState([]);
+
+  const filterSchedules = (schedules) => {
+    if (!days.length) return schedules;
+
+    return schedules.filter(schedule => {
+      let hasDay = false;
+
+      for (let i = 0; i < days.length; i++) {
+        let day = days[i];
+        
+        if (schedule.days.includes(day)) {
+          hasDay = true;
+          break;
+        }
+      }
+      return hasDay;
+    })
+  }
 
   const createSchedules = () => {
-    return schedules.map(schedule => {
+    return filterSchedules(schedules).map(schedule => {
       return (
           <ScheduleCard schedule={schedule} key={schedule.id} editSchedule={editSchedule} runSchedule={runSchedule}/>
         )
     })
   }
 
-  const updateFilter = (days = []) => {
-    setFilter(days)
+  const toggleDay = (day) => {
+    if (days.includes(day)) {
+      setDays(days.filter(i => i !== day))
+    } else {
+      setDays([...days, day].sort());
+    }
   }
 
   const goToRunning = () => {
@@ -31,7 +53,7 @@ const ScheduleArchive = ({ schedules = [], currentRunningSchedule, setSelectedSc
   return (
     <main className="schedule-archive">
       <section className="top">
-        <DaysOfTheWeek setFilter={ setFilter }/>
+        <DaysOfTheWeek days={days} toggleDay={ toggleDay }/>
         <div className="button-container">
           <Link to="/program">
             <Button variant="contained" className="new-program-button control-button" color="primary">New</Button>

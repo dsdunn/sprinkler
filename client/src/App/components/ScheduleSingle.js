@@ -146,7 +146,7 @@ const ScheduleSingle = ({
     } else {
       zones.push(zoneToToggle)
     }
-    dispatch({name: 'zones', value: zones});
+    dispatch({name: 'zones', value: zones.sort()});
     setEndTime({ zones });
   }
 

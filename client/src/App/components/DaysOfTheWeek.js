@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Button, ButtonGroup, Typography } from '@material-ui/core';
 
-export const DaysOfTheWeek = ({ days = [], toggleDay, setFilter = null }) => {
+export const DaysOfTheWeek = ({ days = [], toggleDay, isReadOnly }) => {
     let dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
     let dayButtons = () => {
@@ -14,7 +14,7 @@ export const DaysOfTheWeek = ({ days = [], toggleDay, setFilter = null }) => {
             color={days.includes(index) ? 'primary' : 'secondary'}
             variant="contained" 
             key={index} 
-            onClick={() => toggleDay(index)}
+            onClick={() => !isReadOnly && toggleDay(index)}
           >
             <Typography color={'textPrimary'} >{ day } </Typography>
           </Button>

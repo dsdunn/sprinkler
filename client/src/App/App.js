@@ -117,6 +117,8 @@ const App = (props) => {
       setCurrentRunningSchedule(scheduleToRun);
       setSelectedSchedule(scheduleToRun);
       scheduleToRun.zones && scheduleToRun.zones.length && setCurrentlyOnZone(scheduleToRun.zones[0])
+
+      props.history.push('/program');
       
       return scheduleToRun;
     }

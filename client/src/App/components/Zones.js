@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Button, ButtonGroup, Typography } from '@material-ui/core';
 
-export const Zones = ({ zones = [], toggleZone }) => {
+export const Zones = ({ zones = [], toggleZone, isReadOnly }) => {
   const zoneButtons = () => {
     let layout = [];
 
@@ -13,7 +13,7 @@ export const Zones = ({ zones = [], toggleZone }) => {
           color={zones.includes(i) ? 'primary' : 'secondary'}
           variant="contained" 
           key={i} 
-          onClick={() => toggleZone(i)}
+          onClick={() => !isReadOnly && toggleZone(i)}
         >
           <Typography color={'textPrimary'} >{ i + 1 } </Typography>
         </Button>
