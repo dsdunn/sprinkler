@@ -98,7 +98,7 @@ const ScheduleSingle = ({
     let { name, value } = event.target;
 
     if (name !== 'schedule_name') {
-      value = parseInt(value);
+      // value = parseInt(value);
       setEndTime({ [name]: value });
     }
 
@@ -106,15 +106,15 @@ const ScheduleSingle = ({
     saveSchedule(schedule);
   }
 
-  const updateSchedule = (event) => {
-    event.preventDefault();
-    if (!validateTime(schedule.end_time)) {
-      alert('you suck. invalid end time' + schedule.end_time)
-      return;
-    }
-    saveSchedule(schedule);
-    props.history.goBack();
-  }
+  // const updateSchedule = (event) => {
+  //   event.preventDefault();
+  //   if (!validateTime(schedule.end_time)) {
+  //     alert('you suck. invalid end time' + schedule.end_time)
+  //     return;
+  //   }
+  //   saveSchedule(schedule);
+  //   props.history.goBack();
+  // }
 
   const removeSchedule = (event) => {
     event.preventDefault();
@@ -150,9 +150,9 @@ const ScheduleSingle = ({
     setEndTime({ zones });
   }
 
-  const validateTime = (endtime) => {
-    return (schedule.end_time && !schedule.end_time.includes('NaN'));
-  }
+  // const validateTime = (endtime) => {
+  //   return (schedule.end_time && !schedule.end_time.includes('NaN'));
+  // }
 
   const classes = useStyles();
 

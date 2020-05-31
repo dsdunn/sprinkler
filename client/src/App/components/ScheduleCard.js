@@ -22,7 +22,7 @@ const useStyles = makeStyles({
     },
     '& .card-button': {
       margin: '0.5em',
-      flexGrow: '1'
+      width: '45%'
     },
 
     '& .card-details': {
@@ -61,10 +61,11 @@ export const ScheduleCard = ({ schedule, editSchedule, runSchedule }) => {
             <div><span className="label">days: </span><span>{days}</span></div>
             <div><span className="label">zones: </span><span>{ zones }</span></div>
             <div><span className="label">min/iter/int: </span><span>{ schedule.duration_per_zone + '/' + schedule.iterations + '/' + schedule.interval}</span></div>
+            <div><span className="label">start/end: </span><span>{ schedule.start_time + ' - ' + schedule.end_time }</span></div>
           </div>
           <div className="controls">
             <Button variant="contained" className="card-button" onClick={() => editSchedule(schedule) }>Edit</Button>
-            <Button variant="contained" className="card-button" onClick={() => runSchedule(schedule) }>Run</Button>
+            <Button variant="contained" className="card-button" onClick={() => runSchedule(schedule) }>Run Now</Button>
           </div>
         </div>
     </Card>
