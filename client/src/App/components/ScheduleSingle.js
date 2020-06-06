@@ -106,6 +106,16 @@ const ScheduleSingle = ({
     saveSchedule(schedule);
   }
 
+  // const updateSchedule = (event) => {
+  //   event.preventDefault();
+  //   if (!validateTime(schedule.end_time)) {
+  //     alert('you suck. invalid end time' + schedule.end_time)
+  //     return;
+  //   }
+  //   saveSchedule(schedule);
+  //   props.history.goBack();
+  // }
+
   const removeSchedule = (event) => {
     event.preventDefault();
     deleteSchedule(schedule.id);
@@ -141,6 +151,10 @@ const ScheduleSingle = ({
     dispatch({name: 'zones', value: zones.sort()});
     setEndTime({ zones });
   }
+
+  // const validateTime = (endtime) => {
+  //   return (schedule.end_time && !schedule.end_time.includes('NaN'));
+  // }
 
   const classes = useStyles();
 
