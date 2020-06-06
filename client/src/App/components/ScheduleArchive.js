@@ -19,7 +19,7 @@ const ScheduleArchive = ({ schedules = [], currentRunningSchedule, setSelectedSc
 
       for (let i = 0; i < days.length; i++) {
         let day = days[i];
-        
+
         if (schedule.days.includes(day)) {
           hasDay = true;
           break;

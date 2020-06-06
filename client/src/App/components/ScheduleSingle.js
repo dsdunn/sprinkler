@@ -94,11 +94,11 @@ const ScheduleSingle = ({
     dispatch({name: 'schedule', value: newRunning });
   }
 
-  const handleChange = (event) => {
+  const handleChange = async (event) => {
     let { name, value } = event.target;
+    console.log(name, value);
 
-    if (name !== 'schedule_name') {
-      // value = parseInt(value);
+    if (name !== 'schedule_name' && name !== 'days') {
       setEndTime({ [name]: value });
     }
 
@@ -113,7 +113,9 @@ const ScheduleSingle = ({
   }
 
   const setEndTime = (change) => {
-    schedule.end_time = calculateEndTime({ ...schedule, ...change });
+    let end_time = calculateEndTime({ ...schedule, ...change });
+
+    dispatch({ name: 'end_time', value: end_time });
   }
 
   const toggleDay = (dayToToggle) => {

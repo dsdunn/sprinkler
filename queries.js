@@ -55,8 +55,10 @@ const deleteSchedule = (request, response) => {
 
   knex('schedules').delete({id: id}, '*')
     .then(result => {
+      let schedule_name = result && result[0] && result[0]['schedule_name'];
+
       response.status(200).json({
-        text: 'you have successfully deleted schedule ' + result[0].schedule_name,
+        text: 'you have successfully deleted schedule ' + schedule_name,
         schedule: result[0]
       })
     });

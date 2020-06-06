@@ -7,7 +7,6 @@ export function calculateEndTime({ start_time, interval, iterations, zones, dura
 }
 
 function timeStringToMinutes(string) {
-  console.log(string);
   if (!string) {
     return;
   }

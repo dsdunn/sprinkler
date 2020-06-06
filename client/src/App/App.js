@@ -64,12 +64,13 @@ const App = (props) => {
   }
 
   const createSchedule = async (schedule) => {
+    console.log('create: ', schedule);
     let response = await api.createSchedule(schedule);
 
     setSchedules([...schedules, response.schedule]);
     setSelectedSchedule(response.schedule);
 
-    props.history.goBack();
+    return response;
   }
 
   const putSchedule = async (schedule) => {
@@ -82,7 +83,7 @@ const App = (props) => {
     ])
   }
 
-  const saveSchedule = (schedule) => {
+  const saveSchedule = async (schedule) => {
     if (schedule.id) {
       putSchedule(schedule);
     } else {
@@ -159,7 +160,7 @@ const App = (props) => {
             )}
           />
           <Route 
-            exact path='/program' 
+            exact path='/program ' 
             render={(props) => (
               <ScheduleSingle 
                 {...props} 

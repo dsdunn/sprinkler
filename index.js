@@ -41,7 +41,6 @@ app.put('/api/v1/schedules', db.putSchedule);
 app.delete('/api/v1/schedules', db.deleteSchedule);
 
 app.put('/api/v1/run_schedule', async (req, res) => {
-  console.log(req.body)
   let schedule = req.body;
 
   if (!schedule) {
