@@ -60,6 +60,9 @@ class Clock {
   }
 
   runProgram(schedule) {
+    if (this.current_schedule) {
+      this.stopProgram();
+    }
     this.current_schedule = schedule;
     this.program = new Program(schedule, this.valveControl, this.resetCurrentSchedule);
     this.program.init();
