@@ -25,7 +25,7 @@ export const sprinklerTheme = createMuiTheme({
 export const useStyles = makeStyles({
   root: {
     boxSizing: 'border-box',
-    minHeight: '110vh',
+    height: '100vh',
     backgroundColor: '#253031',
     color: '#BCAB79',
 
@@ -39,11 +39,9 @@ export const useStyles = makeStyles({
         height: '100%',
       }
     },
-    '& .schedule-archive': {
-      overflow: 'scroll',
-    },
     '& .schedule-container': {
       padding: '20vh 12px',
+      height: '100vh',
     },
     '& .top': {
       position: 'fixed',

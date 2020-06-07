@@ -87,7 +87,8 @@ const App = (props) => {
     } else {
       createSchedule(schedule);
     }
-    if (props.history.location.pathname === '/program') { props.history.goBack() };
+
+    setSelectedSchedule({});
   }
 
   const deleteSchedule = async (id) => {
@@ -129,14 +130,16 @@ const App = (props) => {
     return currentRunningSchedule;
   }
 
-  const stopCurrentRunningSchedule = async () => {
-    let response = await api.stopCurrentRunningSchedule();
+  const stopCurrentRunningSchedule = () => {
+    api.stopCurrentRunningSchedule();
     
-    if (response.status === 200) {
-      setCurrentRunningSchedule(null);
-      setCurrentlyOnZone(null);
-      setSelectedSchedule({});
-    }
+    setCurrentRunningSchedule(null);
+    setCurrentlyOnZone(null);
+    setSelectedSchedule({});
+
+    if (props.location.pathname === '/program') { 
+      props.history.push('/');
+    };
   }
 
   const classes = useStyles();

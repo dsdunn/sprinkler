@@ -96,25 +96,13 @@ const ScheduleSingle = ({
 
   const handleChange = async (event) => {
     let { name, value } = event.target;
-    console.log(name, value);
 
     if (name !== 'schedule_name' && name !== 'days') {
       setEndTime({ [name]: value });
     }
 
     dispatch({name, value});
-    saveSchedule(schedule);
   }
-
-  // const updateSchedule = (event) => {
-  //   event.preventDefault();
-  //   if (!validateTime(schedule.end_time)) {
-  //     alert('you suck. invalid end time' + schedule.end_time)
-  //     return;
-  //   }
-  //   saveSchedule(schedule);
-  //   props.history.goBack();
-  // }
 
   const removeSchedule = (event) => {
     event.preventDefault();
@@ -152,10 +140,6 @@ const ScheduleSingle = ({
     setEndTime({ zones });
   }
 
-  // const validateTime = (endtime) => {
-  //   return (schedule.end_time && !schedule.end_time.includes('NaN'));
-  // }
-
   const classes = useStyles();
 
   return (
@@ -167,14 +151,6 @@ const ScheduleSingle = ({
           isReadOnly={isCurrent()}
         />
         <div className="button-container">
-          <Link to="/">
-            <Button 
-              variant="contained"
-              className="new-program-button control-button"
-              color="primary"
-              onClick={() => setSelectedSchedule({})}>
-            Back</Button>
-          </Link>
           {
             currentRunningSchedule &&
               <Button variant="contained" color="secondary" className="stop-button control-button" onClick={ stopRunning }>Stop</Button>
@@ -291,8 +267,29 @@ const ScheduleSingle = ({
           { 
             !isCurrent() &&
               <div className="flex space-evenly">
-                <Button variant="contained" color="secondary" onClick={removeSchedule}>Delete</Button>
+                <Link to="/">
+                  <Button 
+                    variant="contained"
+                    className="new-program-button control-button"
+                    color="primary"
+                    onClick={ () => saveSchedule(schedule)}
+                  >
+                  Save</Button>
+                </Link>
+                <Button variant="contained" color="secondary" className="control-button" onClick={removeSchedule}>Delete</Button>
               </div>
+          }
+          {
+            isCurrent() && 
+              <Link to="/">
+                <Button 
+                  variant="contained"
+                  className="new-program-button control-button"
+                  color="primary"
+                  onClick={() => setSelectedSchedule({})}
+                >
+                Back</Button>
+              </Link>
           }
         </form>
       </section>
