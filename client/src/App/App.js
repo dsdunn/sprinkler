@@ -49,7 +49,6 @@ const App = (props) => {
     data = JSON.parse(data);
     
     let { zone, schedule } = data;
-    console.log(zone, schedule);
     let id = schedule && schedule.id;
     let currentSchedule = getCurrentRunningSchedule();
     let currentId = currentSchedule && currentSchedule.id;
@@ -64,7 +63,6 @@ const App = (props) => {
   }
 
   const createSchedule = async (schedule) => {
-    console.log('create: ', schedule);
     let response = await api.createSchedule(schedule);
 
     setSchedules([...schedules, response.schedule]);
@@ -89,6 +87,7 @@ const App = (props) => {
     } else {
       createSchedule(schedule);
     }
+    if (props.history.location.pathname === '/program') { props.history.goBack() };
   }
 
   const deleteSchedule = async (id) => {
@@ -136,6 +135,7 @@ const App = (props) => {
     if (response.status === 200) {
       setCurrentRunningSchedule(null);
       setCurrentlyOnZone(null);
+      setSelectedSchedule({});
     }
   }
 
@@ -160,7 +160,7 @@ const App = (props) => {
             )}
           />
           <Route 
-            exact path='/program ' 
+            exact path='/program' 
             render={(props) => (
               <ScheduleSingle 
                 {...props} 

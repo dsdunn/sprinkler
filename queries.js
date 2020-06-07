@@ -53,7 +53,7 @@ const deleteSchedule = (request, response) => {
   let id = request.body.id;
   console.log('delete: ', id)
 
-  knex('schedules').delete({id: id}, '*')
+  knex('schedules').where({id: id}).del()
     .then(result => {
       let schedule_name = result && result[0] && result[0]['schedule_name'];
 
