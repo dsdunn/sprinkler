@@ -3,7 +3,7 @@ const knex = require('knex')({
   connection: {
     host : 'localhost',
     user : 'pi',
-    password : 'raspberry',
+    password : 'bigCa$',
     database : 'sprinkler',
     port: 5432
   }
