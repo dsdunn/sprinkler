@@ -41,6 +41,17 @@ const App = (props) => {
     ws.onopen = () => {
       ws.send('socket party')
     }
+      ws.onclose = function(e) {
+      console.log('Socket is closed. Reconnect will be attempted in 5 seconds.', e.reason);
+      setTimeout(function() {
+        initSocket();
+      }, 5000);
+    };
+
+    ws.onerror = function(err) {
+      console.error('Socket encountered error: ', err.message, 'Closing socket');
+      ws.close();
+    };
   }
 
   const handleMessage = (payload) => {
