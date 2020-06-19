@@ -21,8 +21,8 @@ const useStyles = makeStyles({
       display: 'flex',
     },
     '& .card-button': {
-      margin: '0.5em',
-      width: '45%'
+      margin: '10px auto',
+      width: '30%'
     },
 
     '& .card-details': {
@@ -49,10 +49,15 @@ export const ScheduleCard = ({ schedule, editSchedule, runSchedule }) => {
 
   let zones = schedule.zones.map(zone => zone + 1).join(', ');
 
+  const handleRunNow = (event) => {
+    event.stopPropagation();
+    runSchedule(schedule);
+  }
+
   const classes = useStyles();
 
   return (
-    <Card className={classes.root}>
+    <Card className={classes.root} onClick={() => editSchedule(schedule) }>
         <div className="card-title w-full">
           { schedule.schedule_name }
         </div>
@@ -64,8 +69,7 @@ export const ScheduleCard = ({ schedule, editSchedule, runSchedule }) => {
             <div><span className="label">start/end: </span><span>{ schedule.start_time + ' - ' + schedule.end_time }</span></div>
           </div>
           <div className="controls">
-            <Button variant="contained" className="card-button" onClick={() => editSchedule(schedule) }>Edit</Button>
-            <Button variant="contained" className="card-button" onClick={() => runSchedule(schedule) }>Run Now</Button>
+            <Button variant="contained" className="card-button" onClick={ handleRunNow }>Run Now</Button>
           </div>
         </div>
     </Card>
