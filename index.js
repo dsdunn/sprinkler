@@ -86,7 +86,6 @@ app.listen(port);
 console.log('App is listening on port ' + port);
 
 const sendStatus = () => {
-  // console.log(clock.getCurrentSchedule());
   wss.clients.forEach((client) => {
     client.send(JSON.stringify({
       zone: valveControl.getCurrentlyOnZone(),
