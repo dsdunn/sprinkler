@@ -12,8 +12,8 @@ import ScheduleArchive from './components/ScheduleArchive';
 import ScheduleSingle from './components/ScheduleSingle';
 
 
-// const ws = new WebSocket('ws://localhost:8080');
-const ws = new WebSocket('ws://192.168.1.10:8080');
+const ws = new WebSocket('ws://localhost:8080');
+// const ws = new WebSocket('ws://192.168.1.10:8080');
 
 const App = (props) => {
 

@@ -41,6 +41,8 @@ class Clock {
     let nowTime = thisHour + ':' + thisMinute + ':00';
 
     let todaysSchedules = await Queries.pollSchedules(this.today, nowTime);
+    console.log('today, ', this.today);
+    console.log('todays, ', todaysSchedules);
     let scheduleNow = todaysSchedules.find(schedule => {
       return schedule.start_time === nowTime || null;
     })
@@ -52,8 +54,9 @@ class Clock {
 
   getDay() {
     let now = new Date();
-    
-    this.today = now.getDay();
+    let daySunStart = now.getDay();
+    // our week starts Monday
+    this.today = daySunStart === 0 ? 6 : daySunStart - 1;
   }
 
   getCurrentSchedule() {
