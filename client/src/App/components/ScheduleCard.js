@@ -22,7 +22,6 @@ const useStyles = makeStyles({
     },
     '& .card-button': {
       margin: '10px auto',
-      width: '30%'
     },
 
     '& .card-details': {
