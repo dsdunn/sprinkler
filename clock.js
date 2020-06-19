@@ -37,6 +37,7 @@ class Clock {
     let now = new Date();
     let thisHour = now.getHours();
     let thisMinute = now.getMinutes();
+    thisMinute = thisMinute < 9 ? '0' + thisMinute : thisMinute;
     let nowTime = thisHour + ':' + thisMinute + ':00';
 
     let todaysSchedules = await Queries.pollSchedules(this.today, nowTime);
