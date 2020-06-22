@@ -36,6 +36,7 @@ class Clock {
   async checkForSchedule() {
     let now = new Date();
     let thisHour = now.getHours();
+    thisHour = thisHour < 9 ? '0' + thisHour : thisHour;
     let thisMinute = now.getMinutes();
     thisMinute = thisMinute < 9 ? '0' + thisMinute : thisMinute;
     let nowTime = thisHour + ':' + thisMinute + ':00';
@@ -43,6 +44,7 @@ class Clock {
     let todaysSchedules = await Queries.pollSchedules(this.today, nowTime);
     console.log('today, ', this.today);
     console.log('todays, ', todaysSchedules);
+    console.log('nowTime: ', nowTime)
     let scheduleNow = todaysSchedules.find(schedule => {
       return schedule.start_time === nowTime || null;
     })

@@ -57,6 +57,7 @@ const App = (props) => {
 
   const handleMessage = (payload) => {
     let { data } = payload;
+    console.log(data);
 
     data = JSON.parse(data);
     
