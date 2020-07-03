@@ -1,17 +1,12 @@
 #SprinklerTime
+
 ###Control your watering system with a raspberry pi and your local wifi network. 
 
-
 ###Schedule features: Start-time, days of the week, zones (up to 6 currently), duration per zone, interval (time elapsed between complete cycles), and iterations (number of cycles through the zones).
-
-
 
 This app is built with node.js, features a react front-end, and uses a postgres database. While designed to run on a raspberry pi and control solenoid valves through its gpio pins, SprinklerTime can run in demo mode on your local machine for development and testing. If no gpio hardware is detected, the app will automatically run in demo mode. 
 
 *note: This application is designed to run on a local wireless network and be accessed by web browsers on computers/phones on the same network, not over the internet.*
-
-
-
 
 To get started: 
 
